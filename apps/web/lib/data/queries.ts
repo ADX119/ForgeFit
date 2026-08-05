@@ -141,12 +141,33 @@ export async function getWorkout() {
         .eq("workout_plan_id", plan.id)
         .order("day_of_week")
     : { data: [] };
+
+  // Determine today's date in India so we can surface completion state
+  const now = new Date();
+  const completionDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+
+  const entryIds = (entries ?? []).map((entry) => entry.id);
+  const { data: completions } = entryIds.length
+    ? await supabase
+        .from("workout_completions")
+        .select("entry_id")
+        .in("entry_id", entryIds)
+        .eq("completion_date", completionDate)
+    : { data: [] };
+  const completeIds = new Set((completions ?? []).map((item) => item.entry_id));
+
   return {
     plan,
     entries: (entries ?? []).map((entry) => ({
       id: entry.id,
       day_of_week: entry.day_of_week,
       exercise: entry.exercises,
+      completed: completeIds.has(entry.id),
     })) as unknown as WorkoutEntryView[],
   };
 }

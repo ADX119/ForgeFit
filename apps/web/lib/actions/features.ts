@@ -136,8 +136,8 @@ export async function placeDemoOrder(input: unknown): Promise<
   const foodProvider = parsed.data.type === "DISH" ? new MockFoodDeliveryProvider() : null;
   const shoppingProvider = parsed.data.type !== "DISH" ? new MockShoppingProvider() : null;
   const offers = foodProvider
-    ? foodProvider.getOffers(parsed.data.sourceId, parsed.data.sourceName)
-    : shoppingProvider!.getOffers(
+    ? await foodProvider.getOffers(parsed.data.sourceId, parsed.data.sourceName)
+    : await shoppingProvider!.getOffers(
         parsed.data.type as "INGREDIENT" | "EQUIPMENT",
         parsed.data.sourceId,
         parsed.data.sourceName,

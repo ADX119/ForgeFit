@@ -10,18 +10,31 @@ import { getGroceries } from "@/lib/data/queries";
 
 export default async function GroceryPage() {
   const items = await getGroceries();
+  const orderAllUrl =
+    items.length > 0
+      ? `https://www.bigbasket.com/ps/?q=${encodeURIComponent(
+          items.map((item) => item.selected_alternative ?? item.name).join(" "),
+        )}`
+      : undefined;
   const checkedCount = items.filter((item) => item.checked).length;
   return (
     <div className="grid gap-8">
       <PageHeader
         eyebrow="Consolidated grocery list"
         title="One list. Fewer forgotten ingredients."
-        description="Matching ingredients and units are combined automatically when you add recipes."
+        description="This is your combined ingredient list. Use the collective order action to open a provider search for all items in the list."
         action={
-          checkedCount ? (
-            <form action={clearCheckedGroceries}>
-              <Button variant="ghost">Clear {checkedCount} checked</Button>
-            </form>
+          items.length ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <a href={orderAllUrl} target="_blank" rel="noreferrer">
+                <Button>Order full list</Button>
+              </a>
+              {checkedCount ? (
+                <form action={clearCheckedGroceries}>
+                  <Button variant="ghost">Clear {checkedCount} checked</Button>
+                </form>
+              ) : null}
+            </div>
           ) : undefined
         }
       />

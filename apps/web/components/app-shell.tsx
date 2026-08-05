@@ -57,7 +57,7 @@ export function AppShell({
 }) {
   return (
     <div className="min-h-screen pb-24 md:pb-0 md:pl-20 xl:pl-64">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden border-r border-white/8 bg-zinc-950/95 p-3 backdrop-blur md:flex md:w-20 md:flex-col xl:w-64 xl:p-5">
+      <aside className="fixed inset-y-0 left-0 top-0 z-30 hidden border-r border-white/8 bg-zinc-950/95 p-3 backdrop-blur md:flex md:w-20 md:flex-col xl:w-64 xl:p-5 overflow-y-auto">
         <div className="hidden xl:block">
           <Brand />
         </div>

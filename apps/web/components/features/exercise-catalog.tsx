@@ -107,6 +107,22 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
                   </>
                 )}
               </div>
+              {exercise.steps?.length ? (
+                <details className="mt-4 rounded-2xl border border-white/10 bg-zinc-950/80 p-4 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer items-center justify-between text-sm font-bold text-sky-300">
+                    Step-by-step instructions
+                    <span className="text-xs text-zinc-400">{exercise.steps.length} steps</span>
+                  </summary>
+                  <ol className="mt-4 space-y-3 text-sm text-zinc-300">
+                    {exercise.steps.map((step) => (
+                      <li key={step.position} className="space-y-1 rounded-xl bg-white/5 p-3">
+                        <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Step {step.position}</p>
+                        <p>{step.instruction}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </details>
+              ) : null}
               <form action={addWorkoutEntry} className="mt-5 flex gap-2">
                 <input type="hidden" name="exerciseId" value={exercise.id} />
                 <select

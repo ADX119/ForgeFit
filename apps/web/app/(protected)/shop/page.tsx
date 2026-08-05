@@ -13,7 +13,7 @@ export default async function ShopPage() {
       <PageHeader
         eyebrow="Equipment shop · Demo"
         title="Gear that earns its space"
-        description="Recommendations come from the exercises in your plan. Every price and purchase action is a clearly labeled simulation."
+        description="Recommendations are loaded from your equipment database and matched to your workout plan. Every purchase action is a clearly labeled simulation."
       />
       <section>
         <div className="mb-4 flex items-center gap-2">
@@ -63,8 +63,7 @@ function EquipmentCard({
       <h3 className="mt-5 text-xl font-black">{item.name}</h3>
       <p className="mt-2 flex-1 text-sm leading-6 text-zinc-400">{item.description}</p>
       <p className="mt-5 text-2xl font-black">
-        ₹{item.mock_price_inr.toLocaleString("en-IN")}{" "}
-        <span className="text-xs font-bold text-orange-300">DEMO</span>
+        ₹{item.mock_price_inr.toLocaleString("en-IN")} <span className="text-xs font-bold text-orange-300">DB DEMO</span>
       </p>
       <div className="mt-4">
         <DemoOffers type="EQUIPMENT" sourceId={item.id} sourceName={item.name} label="Buy · Demo" />

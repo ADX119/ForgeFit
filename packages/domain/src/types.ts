@@ -43,7 +43,8 @@ export interface CommerceOffer {
   label: string;
   priceInr: number;
   etaMinutes: number;
-  demo: true;
+  demo: boolean;
+  externalUrl?: string;
 }
 
 export interface DemoOrderResult extends CommerceOffer {
@@ -52,11 +53,15 @@ export interface DemoOrderResult extends CommerceOffer {
 }
 
 export interface ShoppingProvider {
-  getOffers(type: "INGREDIENT" | "EQUIPMENT", sourceId: string, label: string): CommerceOffer[];
+  getOffers(
+    type: "INGREDIENT" | "EQUIPMENT",
+    sourceId: string,
+    label: string,
+  ): Promise<CommerceOffer[]>;
   placeDemoOrder(offer: CommerceOffer): DemoOrderResult;
 }
 
 export interface FoodDeliveryProvider {
-  getOffers(recipeId: string, recipeName: string): CommerceOffer[];
+  getOffers(recipeId: string, recipeName: string): Promise<CommerceOffer[]>;
   placeDemoOrder(offer: CommerceOffer): DemoOrderResult;
 }

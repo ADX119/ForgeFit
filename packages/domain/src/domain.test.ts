@@ -44,11 +44,13 @@ describe("grocery helpers", () => {
 });
 
 describe("mock commerce", () => {
-  it("is deterministic and always discloses demo status", () => {
+  it("is deterministic and always discloses demo status", async () => {
     const provider = new MockShoppingProvider();
-    const first = provider.getOffers("INGREDIENT", "paneer", "Paneer");
-    expect(first).toEqual(provider.getOffers("INGREDIENT", "paneer", "Paneer"));
+    const first = await provider.getOffers("INGREDIENT", "paneer", "Paneer");
+    expect(first).toEqual(await provider.getOffers("INGREDIENT", "paneer", "Paneer"));
     expect(provider.placeDemoOrder(first[0]!)).toMatchObject({ demo: true, status: "DEMO_PLACED" });
-    expect(new MockFoodDeliveryProvider().getOffers("recipe-1", "Power Bowl")).toHaveLength(2);
+    expect(await new MockFoodDeliveryProvider().getOffers("recipe-1", "Power Bowl")).toHaveLength(
+      2,
+    );
   });
 });
