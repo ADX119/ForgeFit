@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds and tooling
+.next/
+.turbo/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# environment and local services
+.env
+.env.local
+.env.*.local
+.supabase/
+supabase/.branches/
+supabase/.temp/
+
+# editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
