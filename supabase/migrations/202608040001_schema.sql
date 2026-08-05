@@ -237,18 +237,41 @@ create table if not exists public.mock_orders (
   created_at timestamptz not null default now()
 );
 
-create function public.set_updated_at() returns trigger language plpgsql as $$
+create or replace function public.set_updated_at() returns trigger language plpgsql as $$
 begin
   new.updated_at = now();
   return new;
 end;
 $$;
 
-create trigger profiles_updated_at before update on public.profiles for each row execute function public.set_updated_at();
-create trigger workout_plans_updated_at before update on public.workout_plans for each row execute function public.set_updated_at();
-create trigger grocery_items_updated_at before update on public.grocery_items for each row execute function public.set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'profiles_updated_at'
+  ) THEN
+    CREATE TRIGGER profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END$$;
 
-create function public.handle_new_user() returns trigger
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'workout_plans_updated_at'
+  ) THEN
+    CREATE TRIGGER workout_plans_updated_at BEFORE UPDATE ON public.workout_plans FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'grocery_items_updated_at'
+  ) THEN
+    CREATE TRIGGER grocery_items_updated_at BEFORE UPDATE ON public.grocery_items FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END$$;
+
+create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
   insert into public.profiles (id, display_name)
