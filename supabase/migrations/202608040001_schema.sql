@@ -1,10 +1,10 @@
 create extension if not exists pgcrypto;
 
-create type public.diet_goal as enum ('MUSCLE_GAIN', 'FAT_LOSS', 'MAINTENANCE', 'RECOMPOSITION');
-create type public.activity_level as enum ('SEDENTARY', 'LIGHTLY_ACTIVE', 'MODERATELY_ACTIVE', 'VERY_ACTIVE', 'EXTRA_ACTIVE');
-create type public.calculation_sex as enum ('MALE', 'FEMALE', 'PREFER_NOT_TO_SAY');
-create type public.difficulty as enum ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
-create type public.order_type as enum ('INGREDIENT', 'DISH', 'EQUIPMENT');
+create type if not exists public.diet_goal as enum ('MUSCLE_GAIN', 'FAT_LOSS', 'MAINTENANCE', 'RECOMPOSITION');
+create type if not exists public.activity_level as enum ('SEDENTARY', 'LIGHTLY_ACTIVE', 'MODERATELY_ACTIVE', 'VERY_ACTIVE', 'EXTRA_ACTIVE');
+create type if not exists public.calculation_sex as enum ('MALE', 'FEMALE', 'PREFER_NOT_TO_SAY');
+create type if not exists public.difficulty as enum ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
+create type if not exists public.order_type as enum ('INGREDIENT', 'DISH', 'EQUIPMENT');
 
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
