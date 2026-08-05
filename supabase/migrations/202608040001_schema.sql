@@ -1,10 +1,79 @@
 create extension if not exists pgcrypto;
 
-create type if not exists public.diet_goal as enum ('MUSCLE_GAIN', 'FAT_LOSS', 'MAINTENANCE', 'RECOMPOSITION');
-create type if not exists public.activity_level as enum ('SEDENTARY', 'LIGHTLY_ACTIVE', 'MODERATELY_ACTIVE', 'VERY_ACTIVE', 'EXTRA_ACTIVE');
-create type if not exists public.calculation_sex as enum ('MALE', 'FEMALE', 'PREFER_NOT_TO_SAY');
-create type if not exists public.difficulty as enum ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
-create type if not exists public.order_type as enum ('INGREDIENT', 'DISH', 'EQUIPMENT');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type t
+    JOIN pg_namespace n ON n.oid = t.typnamespace
+    WHERE t.typname = 'diet_goal'
+      AND n.nspname = 'public'
+  ) THEN
+    CREATE TYPE public.diet_goal AS ENUM ('MUSCLE_GAIN', 'FAT_LOSS', 'MAINTENANCE', 'RECOMPOSITION');
+  END IF;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type t
+    JOIN pg_namespace n ON n.oid = t.typnamespace
+    WHERE t.typname = 'activity_level'
+      AND n.nspname = 'public'
+  ) THEN
+    CREATE TYPE public.activity_level AS ENUM ('SEDENTARY', 'LIGHTLY_ACTIVE', 'MODERATELY_ACTIVE', 'VERY_ACTIVE', 'EXTRA_ACTIVE');
+  END IF;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type t
+    JOIN pg_namespace n ON n.oid = t.typnamespace
+    WHERE t.typname = 'calculation_sex'
+      AND n.nspname = 'public'
+  ) THEN
+    CREATE TYPE public.calculation_sex AS ENUM ('MALE', 'FEMALE', 'PREFER_NOT_TO_SAY');
+  END IF;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type t
+    JOIN pg_namespace n ON n.oid = t.typnamespace
+    WHERE t.typname = 'difficulty'
+      AND n.nspname = 'public'
+  ) THEN
+    CREATE TYPE public.difficulty AS ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
+  END IF;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type t
+    JOIN pg_namespace n ON n.oid = t.typnamespace
+    WHERE t.typname = 'order_type'
+      AND n.nspname = 'public'
+  ) THEN
+    CREATE TYPE public.order_type AS ENUM ('INGREDIENT', 'DISH', 'EQUIPMENT');
+  END IF;
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END$$;
 
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
