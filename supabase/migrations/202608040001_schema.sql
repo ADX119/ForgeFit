@@ -75,7 +75,7 @@ EXCEPTION WHEN duplicate_object THEN
   NULL;
 END$$;
 
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text not null check (char_length(display_name) between 2 and 80),
   height_cm numeric(5,1) check (height_cm between 120 and 230),
@@ -90,13 +90,13 @@ create table public.profiles (
   updated_at timestamptz not null default now()
 );
 
-create table public.muscle_groups (
+create table if not exists public.muscle_groups (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
   slug text not null unique
 );
 
-create table public.equipment (
+create table if not exists public.equipment (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
   slug text not null unique,
@@ -105,7 +105,7 @@ create table public.equipment (
   mock_price_inr numeric(10,2) not null check (mock_price_inr > 0)
 );
 
-create table public.exercises (
+create table if not exists public.exercises (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
   slug text not null unique,
@@ -117,7 +117,7 @@ create table public.exercises (
   description text not null
 );
 
-create table public.exercise_steps (
+create table if not exists public.exercise_steps (
   id uuid primary key default gen_random_uuid(),
   exercise_id uuid not null references public.exercises(id) on delete cascade,
   position smallint not null check (position > 0),
@@ -125,19 +125,19 @@ create table public.exercise_steps (
   unique (exercise_id, position)
 );
 
-create table public.exercise_equipment (
+create table if not exists public.exercise_equipment (
   exercise_id uuid not null references public.exercises(id) on delete cascade,
   equipment_id uuid not null references public.equipment(id) on delete cascade,
   primary key (exercise_id, equipment_id)
 );
 
-create table public.exercise_secondary_muscles (
+create table if not exists public.exercise_secondary_muscles (
   exercise_id uuid not null references public.exercises(id) on delete cascade,
   muscle_group_id uuid not null references public.muscle_groups(id) on delete cascade,
   primary key (exercise_id, muscle_group_id)
 );
 
-create table public.recipes (
+create table if not exists public.recipes (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
   slug text not null unique,
@@ -152,13 +152,13 @@ create table public.recipes (
   description text not null
 );
 
-create table public.recipe_goals (
+create table if not exists public.recipe_goals (
   recipe_id uuid not null references public.recipes(id) on delete cascade,
   goal public.diet_goal not null,
   primary key (recipe_id, goal)
 );
 
-create table public.recipe_steps (
+create table if not exists public.recipe_steps (
   id uuid primary key default gen_random_uuid(),
   recipe_id uuid not null references public.recipes(id) on delete cascade,
   position smallint not null check (position > 0),
@@ -166,7 +166,7 @@ create table public.recipe_steps (
   unique (recipe_id, position)
 );
 
-create table public.ingredients (
+create table if not exists public.ingredients (
   id uuid primary key default gen_random_uuid(),
   recipe_id uuid not null references public.recipes(id) on delete cascade,
   name text not null,
@@ -176,14 +176,14 @@ create table public.ingredients (
   unique (recipe_id, normalized_name)
 );
 
-create table public.ingredient_alternatives (
+create table if not exists public.ingredient_alternatives (
   id uuid primary key default gen_random_uuid(),
   ingredient_id uuid not null references public.ingredients(id) on delete cascade,
   name text not null,
   unique (ingredient_id, name)
 );
 
-create table public.workout_plans (
+create table if not exists public.workout_plans (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null unique references auth.users(id) on delete cascade,
   name text not null default 'My Workout Plan' check (char_length(name) between 2 and 80),
@@ -191,7 +191,7 @@ create table public.workout_plans (
   updated_at timestamptz not null default now()
 );
 
-create table public.workout_entries (
+create table if not exists public.workout_entries (
   id uuid primary key default gen_random_uuid(),
   workout_plan_id uuid not null references public.workout_plans(id) on delete cascade,
   exercise_id uuid not null references public.exercises(id),
@@ -200,7 +200,7 @@ create table public.workout_entries (
   unique (workout_plan_id, exercise_id, day_of_week)
 );
 
-create table public.workout_completions (
+create table if not exists public.workout_completions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   entry_id uuid not null references public.workout_entries(id) on delete cascade,
@@ -209,7 +209,7 @@ create table public.workout_completions (
   unique (entry_id, completion_date)
 );
 
-create table public.grocery_items (
+create table if not exists public.grocery_items (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null,
@@ -224,7 +224,7 @@ create table public.grocery_items (
   unique (user_id, normalized_name, unit)
 );
 
-create table public.mock_orders (
+create table if not exists public.mock_orders (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   order_type public.order_type not null,
