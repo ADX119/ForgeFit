@@ -290,7 +290,7 @@ BEGIN
   END IF;
 END$$;
 
-create function public.add_recipe_to_grocery_list(p_recipe_id uuid, p_servings numeric)
+create or replace function public.add_recipe_to_grocery_list(p_recipe_id uuid, p_servings numeric)
 returns void language plpgsql security invoker set search_path = '' as $$
 declare
   recipe_servings numeric;
@@ -330,49 +330,259 @@ alter table public.workout_completions enable row level security;
 alter table public.grocery_items enable row level security;
 alter table public.mock_orders enable row level security;
 
-create policy "catalog muscle groups" on public.muscle_groups for select to authenticated using (true);
-create policy "catalog equipment" on public.equipment for select to authenticated using (true);
-create policy "catalog exercises" on public.exercises for select to authenticated using (true);
-create policy "catalog exercise steps" on public.exercise_steps for select to authenticated using (true);
-create policy "catalog exercise equipment" on public.exercise_equipment for select to authenticated using (true);
-create policy "catalog secondary muscles" on public.exercise_secondary_muscles for select to authenticated using (true);
-create policy "catalog recipes" on public.recipes for select to authenticated using (true);
-create policy "catalog recipe goals" on public.recipe_goals for select to authenticated using (true);
-create policy "catalog recipe steps" on public.recipe_steps for select to authenticated using (true);
-create policy "catalog ingredients" on public.ingredients for select to authenticated using (true);
-create policy "catalog alternatives" on public.ingredient_alternatives for select to authenticated using (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog muscle groups'
+  ) THEN
+    CREATE POLICY "catalog muscle groups" ON public.muscle_groups FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
 
-create policy "own profile read" on public.profiles for select using ((select auth.uid()) = id);
-create policy "own profile update" on public.profiles for update using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
-create policy "own plan read" on public.workout_plans for select using ((select auth.uid()) = user_id);
-create policy "own plan update" on public.workout_plans for update using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog equipment'
+  ) THEN
+    CREATE POLICY "catalog equipment" ON public.equipment FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
 
-create policy "own entries read" on public.workout_entries for select using (
-  exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
-);
-create policy "own entries insert" on public.workout_entries for insert with check (
-  exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
-);
-create policy "own entries delete" on public.workout_entries for delete using (
-  exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
-);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog exercises'
+  ) THEN
+    CREATE POLICY "catalog exercises" ON public.exercises FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
 
-create policy "own completions read" on public.workout_completions for select using ((select auth.uid()) = user_id);
-create policy "own completions insert" on public.workout_completions for insert with check (
-  (select auth.uid()) = user_id and exists (
-    select 1 from public.workout_entries e join public.workout_plans p on p.id = e.workout_plan_id
-    where e.id = entry_id and p.user_id = (select auth.uid())
-  )
-);
-create policy "own completions delete" on public.workout_completions for delete using ((select auth.uid()) = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog exercise steps'
+  ) THEN
+    CREATE POLICY "catalog exercise steps" ON public.exercise_steps FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
 
-create policy "own groceries read" on public.grocery_items for select using ((select auth.uid()) = user_id);
-create policy "own groceries insert" on public.grocery_items for insert with check ((select auth.uid()) = user_id);
-create policy "own groceries update" on public.grocery_items for update using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
-create policy "own groceries delete" on public.grocery_items for delete using ((select auth.uid()) = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog exercise equipment'
+  ) THEN
+    CREATE POLICY "catalog exercise equipment" ON public.exercise_equipment FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
 
-create policy "own orders read" on public.mock_orders for select using ((select auth.uid()) = user_id);
-create policy "own orders insert" on public.mock_orders for insert with check ((select auth.uid()) = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog secondary muscles'
+  ) THEN
+    CREATE POLICY "catalog secondary muscles" ON public.exercise_secondary_muscles FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog recipes'
+  ) THEN
+    CREATE POLICY "catalog recipes" ON public.recipes FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog recipe goals'
+  ) THEN
+    CREATE POLICY "catalog recipe goals" ON public.recipe_goals FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog recipe steps'
+  ) THEN
+    CREATE POLICY "catalog recipe steps" ON public.recipe_steps FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog ingredients'
+  ) THEN
+    CREATE POLICY "catalog ingredients" ON public.ingredients FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'catalog alternatives'
+  ) THEN
+    CREATE POLICY "catalog alternatives" ON public.ingredient_alternatives FOR SELECT TO authenticated USING (true);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own profile read'
+  ) THEN
+    CREATE POLICY "own profile read" ON public.profiles FOR SELECT USING ((select auth.uid()) = id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own profile update'
+  ) THEN
+    CREATE POLICY "own profile update" ON public.profiles FOR UPDATE USING ((select auth.uid()) = id) WITH CHECK ((select auth.uid()) = id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own plan read'
+  ) THEN
+    CREATE POLICY "own plan read" ON public.workout_plans FOR SELECT USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own plan update'
+  ) THEN
+    CREATE POLICY "own plan update" ON public.workout_plans FOR UPDATE USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own entries read'
+  ) THEN
+    CREATE POLICY "own entries read" ON public.workout_entries FOR SELECT USING (
+      exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
+    );
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own entries insert'
+  ) THEN
+    CREATE POLICY "own entries insert" ON public.workout_entries FOR INSERT WITH CHECK (
+      exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
+    );
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own entries delete'
+  ) THEN
+    CREATE POLICY "own entries delete" ON public.workout_entries FOR DELETE USING (
+      exists (select 1 from public.workout_plans p where p.id = workout_plan_id and p.user_id = (select auth.uid()))
+    );
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own completions read'
+  ) THEN
+    CREATE POLICY "own completions read" ON public.workout_completions FOR SELECT USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own completions insert'
+  ) THEN
+    CREATE POLICY "own completions insert" ON public.workout_completions FOR INSERT WITH CHECK (
+      (select auth.uid()) = user_id and exists (
+        select 1 from public.workout_entries e join public.workout_plans p on p.id = e.workout_plan_id
+        where e.id = entry_id and p.user_id = (select auth.uid())
+      )
+    );
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own completions delete'
+  ) THEN
+    CREATE POLICY "own completions delete" ON public.workout_completions FOR DELETE USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own groceries read'
+  ) THEN
+    CREATE POLICY "own groceries read" ON public.grocery_items FOR SELECT USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own groceries insert'
+  ) THEN
+    CREATE POLICY "own groceries insert" ON public.grocery_items FOR INSERT WITH CHECK ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own groceries update'
+  ) THEN
+    CREATE POLICY "own groceries update" ON public.grocery_items FOR UPDATE USING ((select auth.uid()) = user_id) WITH CHECK ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own groceries delete'
+  ) THEN
+    CREATE POLICY "own groceries delete" ON public.grocery_items FOR DELETE USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own orders read'
+  ) THEN
+    CREATE POLICY "own orders read" ON public.mock_orders FOR SELECT USING ((select auth.uid()) = user_id);
+  END IF;
+END$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policy WHERE polname = 'own orders insert'
+  ) THEN
+    CREATE POLICY "own orders insert" ON public.mock_orders FOR INSERT WITH CHECK ((select auth.uid()) = user_id);
+  END IF;
+END$$;
 
 grant execute on function public.add_recipe_to_grocery_list(uuid, numeric) to authenticated;
 
