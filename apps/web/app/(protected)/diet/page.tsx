@@ -6,7 +6,7 @@ import { getCurrentProfile, getRecipes } from "@/lib/data/queries";
 export default async function DietPage() {
   const [recipes, profile] = await Promise.all([getRecipes(), getCurrentProfile()]);
   const recipeSuggestions =
-    profile.age && profile.height_cm && profile.weight_kg && profile.calculation_sex && profile.activity_level && profile.goal
+    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
       ? await generateRecipeRecommendations(
           {
             age: profile.age,
@@ -19,7 +19,7 @@ export default async function DietPage() {
         )
       : "Complete your profile to see personalized meal ideas.";
   const dietPlan =
-    profile.age && profile.height_cm && profile.weight_kg && profile.calculation_sex && profile.activity_level && profile.goal
+    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
       ? await generateDietPlan(
           {
             age: profile.age,

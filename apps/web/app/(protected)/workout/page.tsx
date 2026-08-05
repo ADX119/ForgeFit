@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { default as NextLink } from "next/link";
 import { CalendarDays, Plus, Trash2, Check } from "lucide-react";
 import { Badge, Button, Card, EmptyState, PageHeader } from "@fitforge/ui";
 import { removeWorkoutEntry, setWorkoutCompletion } from "@/lib/actions/features";
@@ -15,7 +15,7 @@ function indiaTodayString() {
 export default async function WorkoutPage() {
   const [profile, { entries }] = await Promise.all([getCurrentProfile(), getWorkout()]);
   const workoutPlanSummary =
-    profile.age && profile.height_cm && profile.weight_kg && profile.calculation_sex && profile.activity_level && profile.goal
+    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
       ? await generateWorkoutPlan({
           age: profile.age,
           heightCm: profile.height_cm,
@@ -35,11 +35,11 @@ export default async function WorkoutPage() {
         title="Your week, built deliberately"
         description="A repeatable plan is more valuable than a perfect one. Start small and distribute hard sessions."
         action={
-          <Link href="/exercises">
+          <NextLink href="/exercises">
             <Button>
               <Plus className="size-4" /> Add exercise
             </Button>
-          </Link>
+          </NextLink>
         }
       />
       <Card className="border-l-4 border-sky-400/60 bg-gradient-to-b from-zinc-950/50 to-zinc-950/20 p-4">
