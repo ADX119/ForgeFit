@@ -1,41 +1,50 @@
 @import "tailwindcss";
 @source "../../../packages/ui/src";
 
+/* ForgeFit design tokens (see "UI design system" in the product blueprint).
+   Tailwind turns each --color-* into utilities: bg-surface, text-muted, border-line, bg-primary… */
+@theme {
+  --color-canvas: #09090b; /* app background */
+  --color-surface: #111113; /* cards, sheets */
+  --color-raised: #18181b; /* inputs, hovered rows, nested panels */
+  --color-line: rgb(255 255 255 / 0.08); /* decorative dividers and card edges */
+  --color-line-strong: #71717a; /* input borders, focusable boundaries (3:1) */
+  --color-ink: #f4f4f5; /* primary text (~18:1) */
+  --color-muted: #a1a1aa; /* secondary text (~7.9:1) */
+  --color-disabled: #71717a; /* disabled only */
+  --color-primary: #bef264; /* the one primary action, active nav, focus, completed sets */
+  --color-primary-hover: #d9f99d;
+  --color-on-primary: #09090b;
+  --color-secondary: #7dd3fc; /* links, informational highlights, second chart series */
+  --color-nutrition: #fdba74; /* nutrition area accent */
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+
+  --font-sans:
+    var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
 :root {
   color-scheme: dark;
-  --background: #09090b;
-  --surface: #111113;
-  --muted: #a1a1aa;
-  --accent: #bef264;
 }
 
 * {
   box-sizing: border-box;
 }
 html {
-  background: var(--background);
+  background: var(--color-canvas);
   scroll-behavior: smooth;
 }
 body {
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(circle at 85% -10%, rgba(190, 242, 100, 0.12), transparent 35rem),
-    radial-gradient(circle at -10% 35%, rgba(249, 115, 22, 0.06), transparent 32rem),
-    var(--background);
-  color: #f4f4f5;
-  font-family:
-    var(--font-inter),
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
 }
-
 button,
 input,
 select,
@@ -47,7 +56,7 @@ a {
   text-decoration: none;
 }
 ::selection {
-  background: rgba(190, 242, 100, 0.28);
+  background: rgb(190 242 100 / 0.28);
   color: white;
 }
 

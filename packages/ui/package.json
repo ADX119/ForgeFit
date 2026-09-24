@@ -15,6 +15,7 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^0.544.0",
+    "radix-ui": "^1.6.7",
     "react": "^19.2.0",
     "tailwind-merge": "^3.3.1"
   },
@@ -22,6 +23,7 @@
     "@eslint/js": "^9.35.0",
     "@forgefit/config": "workspace:*",
     "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.2.4",
     "eslint": "^9.35.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.42.0",
