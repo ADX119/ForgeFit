@@ -111,19 +111,38 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
               {exercise.steps?.length ? (
                 <details className="mt-4 rounded-2xl border border-line bg-canvas/80 p-4 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between text-sm font-bold text-secondary">
-                    Step-by-step instructions
+                    How to do it
                     <span className="text-xs text-muted">{exercise.steps.length} steps</span>
                   </summary>
                   <ol className="mt-4 space-y-3 text-sm text-ink/85">
-                    {exercise.steps.map((step) => (
-                      <li key={step.position} className="space-y-1 rounded-xl bg-raised p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-muted">
-                          Step {step.position}
-                        </p>
-                        <p>{step.instruction}</p>
-                      </li>
-                    ))}
+                    {[...exercise.steps]
+                      .sort((a, b) => a.position - b.position)
+                      .map((step) => (
+                        <li key={step.position} className="space-y-1 rounded-xl bg-raised p-3">
+                          <p className="text-xs uppercase tracking-[0.18em] text-muted">
+                            Step {step.position}
+                          </p>
+                          <p>{step.instruction}</p>
+                        </li>
+                      ))}
                   </ol>
+                  {exercise.cues.length ? (
+                    <div className="mt-4">
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted">
+                        Form cues
+                      </p>
+                      <ul className="mt-2 grid gap-1.5 text-sm text-ink/85">
+                        {exercise.cues.map((cue) => (
+                          <li key={cue} className="flex gap-2">
+                            <span aria-hidden="true" className="text-muted">
+                              —
+                            </span>
+                            {cue}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
                 </details>
               ) : null}
               <ActionForm action={addWorkoutEntry} className="mt-5 flex gap-2">

@@ -4,6 +4,7 @@ import { calculateMacroTarget, zonedDay, zonedWeekDates, type DietGoal } from "@
 import type {
   EquipmentRow,
   ExerciseRow,
+  PurchasableEquipmentRow,
   GroceryItemRow,
   MockOrderRow,
   ProfileRow,
@@ -214,7 +215,7 @@ export async function getEquipment() {
   const supabase = await createClient();
   const profile = await getCurrentProfile();
   const [{ data: items, error }, { data: plan }] = await Promise.all([
-    supabase.from("equipment").select("*").order("name"),
+    supabase.from("equipment").select("*").eq("purchasable", true).order("name"),
     supabase.from("workout_plans").select("id").eq("user_id", profile.id).single(),
   ]);
   if (error) throw new Error(error.message);
@@ -233,7 +234,7 @@ export async function getEquipment() {
       ),
     );
   }
-  return { items: items as EquipmentRow[], relevant };
+  return { items: items as PurchasableEquipmentRow[], relevant };
 }
 
 export async function getOrders(): Promise<MockOrderRow[]> {

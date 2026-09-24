@@ -87,8 +87,13 @@ export interface EquipmentRow {
   slug: string;
   description: string;
   image_path: string;
-  mock_price_inr: number;
+  /** Null for gym machines, which aren't sold in the Shop. */
+  mock_price_inr: number | null;
+  purchasable: boolean;
 }
+
+/** Equipment that can be bought in the Shop always has a price. */
+export type PurchasableEquipmentRow = EquipmentRow & { mock_price_inr: number; purchasable: true };
 
 export interface WorkoutEntryRow {
   id: Id;

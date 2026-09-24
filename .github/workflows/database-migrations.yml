@@ -1,0 +1,45 @@
+# Applies new files in supabase/migrations to the Supabase project when they reach main.
+# Uses the SUPABASE_DB_URL repository secret (Session pooler connection string); see README.
+# The Supabase CLI records each applied migration, so every file runs exactly once.
+
+name: Database migrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/migrations/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-migrations
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - name: Check secret
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::Set the SUPABASE_DB_URL repository secret."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Show pending migrations
+        run: supabase db push --db-url "$SUPABASE_DB_URL" --dry-run
+
+      - name: Apply migrations
+        run: supabase db push --db-url "$SUPABASE_DB_URL"
