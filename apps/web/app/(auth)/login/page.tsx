@@ -16,6 +16,9 @@ export default async function LoginPage({
       title="Sign in to your forge"
       description="Pick up today’s session and keep the momentum moving."
     >
+      {error === "confirmed" ? (
+        <LinkError message="Your email is confirmed. Sign in to continue." />
+      ) : null}
       {error === "confirmation" ? (
         <LinkError message="That confirmation link is invalid or has expired. Sign in if you already confirmed, or register again for a new link." />
       ) : null}

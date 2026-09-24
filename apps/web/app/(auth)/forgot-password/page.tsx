@@ -15,6 +15,9 @@ export default async function ForgotPasswordPage({
       title="Reset your password"
       description="We’ll email you a secure recovery link."
     >
+      {error === "device" ? (
+        <LinkError message="For your security, open the reset link in the same browser where you requested it. Request a new link below." />
+      ) : null}
       {error === "link" ? (
         <LinkError message="That reset link is invalid or has expired. Request a new one below." />
       ) : null}

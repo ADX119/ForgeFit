@@ -9,7 +9,13 @@ export function safeNextPath(next: string | null, type: string | null): string {
   return next;
 }
 
-/** Where to send someone whose email link was invalid or expired. */
-export function failedLinkPath(next: string): string {
-  return next === "/update-password" ? "/forgot-password?error=link" : "/login?error=confirmation";
+/**
+ * Where to send someone whose email link didn't sign them in.
+ * `viaCode` links come from Supabase's default templates: Supabase has already verified the
+ * email before handing over the code, and the code only works in the browser that asked for it.
+ */
+export function failedLinkPath(next: string, viaCode = false): string {
+  if (next === "/update-password")
+    return viaCode ? "/forgot-password?error=device" : "/forgot-password?error=link";
+  return viaCode ? "/login?error=confirmed" : "/login?error=confirmation";
 }

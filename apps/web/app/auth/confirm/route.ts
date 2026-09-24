@@ -22,5 +22,7 @@ export async function GET(request: NextRequest) {
     verified = !error;
   }
 
-  return NextResponse.redirect(new URL(verified ? next : failedLinkPath(next), request.url));
+  return NextResponse.redirect(
+    new URL(verified ? next : failedLinkPath(next, Boolean(code) && !tokenHash), request.url),
+  );
 }

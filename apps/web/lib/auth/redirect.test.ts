@@ -23,4 +23,9 @@ describe("failedLinkPath", () => {
     expect(failedLinkPath("/update-password")).toBe("/forgot-password?error=link");
     expect(failedLinkPath("/onboarding")).toBe("/login?error=confirmation");
   });
+
+  it("tells people when a default-template link was opened in another browser", () => {
+    expect(failedLinkPath("/onboarding", true)).toBe("/login?error=confirmed");
+    expect(failedLinkPath("/update-password", true)).toBe("/forgot-password?error=device");
+  });
 });
