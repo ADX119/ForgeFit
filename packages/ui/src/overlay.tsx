@@ -37,7 +37,7 @@ export function DialogContent({
       <DialogPrimitive.Overlay className={overlayClasses} />
       <DialogPrimitive.Content
         className={cn(
-          "fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md rounded-2xl border border-line bg-surface p-6 shadow-2xl shadow-black/50 focus:outline-none",
+          "fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md rounded-xl border border-line bg-surface p-6 shadow-2xl shadow-black/50 focus:outline-none",
           "sm:inset-x-0 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2",
           className,
         )}
@@ -125,8 +125,8 @@ export function SheetContent({
       <DialogPrimitive.Overlay className={overlayClasses} />
       <DialogPrimitive.Content
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 flex max-h-[90dvh] flex-col rounded-t-3xl border border-line bg-surface shadow-2xl shadow-black/50 focus:outline-none",
-          "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[420px] md:rounded-none md:rounded-l-3xl",
+          "fixed inset-x-0 bottom-0 z-50 flex max-h-[90dvh] flex-col rounded-t-2xl border border-line bg-surface shadow-2xl shadow-black/50 focus:outline-none",
+          "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[420px] md:rounded-none md:rounded-l-2xl",
           className,
         )}
       >
@@ -166,7 +166,7 @@ export const TabsContent = TabsPrimitive.Content;
 export function TabsList({ className, ...props }: ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
-      className={cn("inline-flex rounded-xl border border-line bg-surface p-1", className)}
+      className={cn("inline-flex rounded-lg border border-line bg-surface p-1", className)}
       {...props}
     />
   );
@@ -176,7 +176,7 @@ export function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsP
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "min-h-10 rounded-lg px-4 text-sm font-medium text-muted transition-colors hover:text-ink",
+        "min-h-10 rounded-md px-4 text-sm font-medium text-muted transition-colors hover:text-ink",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         "data-[state=active]:bg-raised data-[state=active]:text-ink",
         className,

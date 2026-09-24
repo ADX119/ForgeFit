@@ -16,9 +16,9 @@ export default function ErrorBoundary({
   }, [error]);
   return (
     <Card className="mx-auto mt-20 max-w-lg text-center">
-      <AlertTriangle className="mx-auto size-9 text-orange-300" />
-      <h1 className="mt-5 text-2xl font-black">That set didn’t land</h1>
-      <p className="mt-3 text-sm leading-6 text-zinc-400">
+      <AlertTriangle className="mx-auto size-9 text-nutrition" />
+      <h1 className="mt-5 text-2xl font-semibold">That set didn’t land</h1>
+      <p className="mt-3 text-sm leading-6 text-muted">
         ForgeFit could not load this section. Check the connection and try again.
       </p>
       <Button className="mt-6" onClick={reset}>

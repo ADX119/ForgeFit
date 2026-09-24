@@ -11,9 +11,9 @@ export default function RegisterPage() {
       description="Build a plan around your body, schedule, and goal."
     >
       <AuthForm mode="register" action={register} />
-      <p className="mt-6 text-center text-sm text-zinc-400">
+      <p className="mt-6 text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link className="font-bold text-lime-300" href="/login">
+        <Link className="font-bold text-primary" href="/login">
           Sign in
         </Link>
       </p>

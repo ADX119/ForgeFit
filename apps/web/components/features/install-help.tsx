@@ -34,7 +34,7 @@ export function InstallHelp() {
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
   if (standalone)
-    return <p className="text-sm font-bold text-lime-300">ForgeFit is installed on this device.</p>;
+    return <p className="text-sm font-bold text-primary">ForgeFit is installed on this device.</p>;
   return (
     <div>
       <Button
@@ -47,7 +47,7 @@ export function InstallHelp() {
         <Download className="size-4" />
         Install ForgeFit
       </Button>
-      <p className="mt-3 text-xs leading-5 text-zinc-400">
+      <p className="mt-3 text-xs leading-5 text-muted">
         {prompt
           ? "Install for a standalone app experience."
           : "On iPhone or iPad, use Share → Add to Home Screen."}

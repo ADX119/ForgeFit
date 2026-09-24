@@ -41,7 +41,7 @@ export function RecipeCatalog({
       <div className="flex flex-col gap-3 lg:flex-row">
         <label className="relative flex-1">
           <span className="sr-only">Search recipes</span>
-          <Search className="absolute left-3 top-3.5 size-4 text-zinc-400" />
+          <Search className="absolute left-3 top-3.5 size-4 text-muted" />
           <input
             className="input pl-10"
             placeholder="Search recipes…"
@@ -54,7 +54,7 @@ export function RecipeCatalog({
             <button
               key={item.value}
               onClick={() => setGoal(item.value)}
-              className={`min-h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${goal === item.value ? "border-lime-300 bg-lime-300/10 text-lime-300" : "border-zinc-700 text-zinc-400 hover:text-white"}`}
+              className={`min-h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${goal === item.value ? "border-primary bg-primary/10 text-primary" : "border-line-strong/60 text-muted hover:text-ink"}`}
             >
               {item.label}
             </button>
@@ -67,11 +67,11 @@ export function RecipeCatalog({
             <Link
               href={`/recipes/${recipe.id}` as Route}
               key={recipe.id}
-              className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+              className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <Card className="h-full transition hover:-translate-y-0.5 hover:border-lime-300/25">
+              <Card className="h-full transition hover:-translate-y-0.5 hover:border-primary/25">
                 <div className="flex items-start justify-between">
-                  <div className="grid size-12 place-items-center rounded-xl bg-orange-300/10 text-orange-300">
+                  <div className="grid size-12 place-items-center rounded-xl bg-nutrition/10 text-nutrition">
                     <UtensilsCrossed className="size-6" />
                   </div>
                   <Badge>{recipe.difficulty}</Badge>
@@ -79,9 +79,9 @@ export function RecipeCatalog({
                 <div className="mt-5">
                   <DietMark diet={recipe.diet_type} />
                 </div>
-                <h2 className="mt-2 text-xl font-black">{recipe.name}</h2>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">{recipe.description}</p>
-                <div className="mt-5 flex items-center gap-4 text-xs font-bold text-zinc-400">
+                <h2 className="mt-2 text-xl font-semibold">{recipe.name}</h2>
+                <p className="mt-2 text-sm leading-6 text-muted">{recipe.description}</p>
+                <div className="mt-5 flex items-center gap-4 text-xs font-bold text-muted">
                   <span className="flex items-center gap-1">
                     <Clock className="size-4" />
                     {recipe.prep_time_minutes} min

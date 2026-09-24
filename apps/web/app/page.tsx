@@ -29,13 +29,13 @@ export default function LandingPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/login"
-            className="rounded-xl px-4 py-3 text-sm font-bold text-zinc-300 hover:text-white"
+            className="rounded-xl px-4 py-3 text-sm font-bold text-ink/85 hover:text-ink"
           >
             Sign in
           </Link>
           <Link
             href="/register"
-            className="rounded-xl bg-lime-300 px-4 py-3 text-sm font-black text-zinc-950 hover:bg-lime-200"
+            className="rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary hover:bg-primary-hover"
           >
             Start forging
           </Link>
@@ -46,49 +46,49 @@ export default function LandingPage() {
           <Badge tone="lime">
             <Sparkles className="mr-1 size-3" /> Your daily performance system
           </Badge>
-          <h1 className="mt-7 max-w-4xl text-5xl font-black leading-[0.94] tracking-[-0.055em] text-white sm:text-7xl">
+          <h1 className="mt-7 max-w-4xl text-5xl font-semibold leading-[0.94] tracking-[-0.055em] text-ink sm:text-7xl">
             Build the body.
             <br />
-            <span className="text-lime-300">Forge the habits.</span>
+            <span className="text-primary">Forge the habits.</span>
           </h1>
-          <p className="mt-7 max-w-xl text-base leading-7 text-zinc-400 sm:text-lg">
+          <p className="mt-7 max-w-xl text-base leading-7 text-muted sm:text-lg">
             One focused place for workouts, goal-led meals, a consolidated grocery list, and
             equipment that fits your plan.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               href="/register"
-              className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-lime-300 px-5 font-black text-zinc-950 hover:bg-lime-200"
+              className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 font-semibold text-on-primary hover:bg-primary-hover"
             >
               Build my plan <ArrowRight className="size-4" />
             </Link>
             <Link
               href="#features"
-              className="inline-flex min-h-12 items-center rounded-xl border border-zinc-700 px-5 font-bold text-zinc-200 hover:border-zinc-500"
+              className="inline-flex min-h-12 items-center rounded-xl border border-line-strong/60 px-5 font-bold text-ink hover:border-muted"
             >
               Explore features
             </Link>
           </div>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-zinc-400">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-muted">
             {["21 guided exercises", "12 goal-based recipes", "No real purchases"].map((item) => (
               <span key={item} className="flex items-center gap-2">
-                <Check className="size-4 text-lime-300" />
+                <Check className="size-4 text-primary" />
                 {item}
               </span>
             ))}
           </div>
         </div>
         <div className="relative">
-          <div className="absolute -inset-8 -z-10 rounded-full bg-lime-300/10 blur-3xl" />
-          <Card className="overflow-hidden border-lime-300/15 bg-zinc-950 p-0">
-            <div className="flex items-center justify-between border-b border-white/8 p-5">
+          <div className="absolute -inset-8 -z-10 rounded-full bg-primary/10 blur-3xl" />
+          <Card className="overflow-hidden border-primary/15 bg-canvas p-0">
+            <div className="flex items-center justify-between border-b border-line p-5">
               <div>
-                <p className="text-xs font-black uppercase tracking-widest text-lime-300">
+                <p className="text-xs font-semibold uppercase tracking-widest text-primary">
                   Tuesday · Push
                 </p>
-                <h2 className="mt-1 text-xl font-black">Today’s forge</h2>
+                <h2 className="mt-1 text-xl font-semibold">Today’s forge</h2>
               </div>
-              <span className="grid size-12 place-items-center rounded-full border-4 border-lime-300 text-sm font-black">
+              <span className="grid size-12 place-items-center rounded-full border-4 border-primary text-sm font-semibold">
                 67%
               </span>
             </div>
@@ -97,58 +97,58 @@ export default function LandingPage() {
                 (exercise, index) => (
                   <div
                     key={exercise}
-                    className="flex items-center gap-4 rounded-xl border border-white/7 bg-zinc-900 p-4"
+                    className="flex items-center gap-4 rounded-xl border border-line bg-surface p-4"
                   >
                     <span
-                      className={`grid size-9 place-items-center rounded-lg text-sm font-black ${index < 2 ? "bg-lime-300 text-zinc-950" : "bg-zinc-800 text-zinc-400"}`}
+                      className={`grid size-9 place-items-center rounded-lg text-sm font-semibold ${index < 2 ? "bg-primary text-on-primary" : "bg-raised text-muted"}`}
                     >
                       {index < 2 ? <Check className="size-4" /> : "3"}
                     </span>
                     <div className="flex-1">
                       <p className="font-bold">{exercise}</p>
-                      <p className="mt-1 text-xs text-zinc-400">3 sets · 8–12 reps</p>
+                      <p className="mt-1 text-xs text-muted">3 sets · 8–12 reps</p>
                     </div>
                   </div>
                 ),
               )}
             </div>
             <div className="grid grid-cols-3 gap-px bg-white/8">
-              <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-400">Calories</p>
-                <p className="mt-1 text-xl font-black">2,420</p>
+              <div className="bg-surface p-4">
+                <p className="text-xs text-muted">Calories</p>
+                <p className="mt-1 text-xl font-semibold">2,420</p>
               </div>
-              <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-400">Protein</p>
-                <p className="mt-1 text-xl font-black">140g</p>
+              <div className="bg-surface p-4">
+                <p className="text-xs text-muted">Protein</p>
+                <p className="mt-1 text-xl font-semibold">140g</p>
               </div>
-              <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-400">Groceries</p>
-                <p className="mt-1 text-xl font-black">8</p>
+              <div className="bg-surface p-4">
+                <p className="text-xs text-muted">Groceries</p>
+                <p className="mt-1 text-xl font-semibold">8</p>
               </div>
             </div>
           </Card>
         </div>
       </section>
-      <section id="features" className="border-y border-white/8 bg-zinc-950/45">
+      <section id="features" className="border-y border-line bg-canvas/45">
         <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             Everything connects
           </p>
-          <h2 className="mt-3 max-w-2xl text-3xl font-black tracking-tight sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
             Less switching. More consistency.
           </h2>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {pillars.map(({ icon: Icon, title, body }) => (
               <Card key={title}>
-                <Icon className="size-7 text-lime-300" />
-                <h3 className="mt-5 text-xl font-black">{title}</h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-400">{body}</p>
+                <Icon className="size-7 text-primary" />
+                <h3 className="mt-5 text-xl font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted">{body}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
-      <footer className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-zinc-400 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <footer className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <Brand />
         <p>Demo commerce only · Fitness estimates are not medical advice.</p>
       </footer>

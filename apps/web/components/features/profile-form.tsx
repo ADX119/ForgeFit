@@ -94,7 +94,7 @@ export function ProfileForm({
             <option value="FEMALE">Female</option>
             <option value="MALE">Male</option>
           </select>
-          <span className="text-xs font-normal leading-5 text-zinc-400">
+          <span className="text-xs font-normal leading-5 text-muted">
             Used only for the calorie estimate.
           </span>
         </label>
@@ -124,14 +124,14 @@ export function ProfileForm({
       </label>
       <fieldset className="grid gap-3">
         <legend className="label">How do you eat?</legend>
-        <p id="diet-hint" className="-mt-1 text-xs text-zinc-400">
+        <p id="diet-hint" className="-mt-1 text-xs text-muted">
           Recipes are filtered to match. You can change this anytime.
         </p>
         <div className="grid gap-2 sm:grid-cols-2">
           {DIET_PREFERENCES.map((preference) => (
             <label
               key={preference}
-              className="flex cursor-pointer items-start gap-3 rounded-xl border border-zinc-600 p-3 has-[:checked]:border-lime-300 has-[:checked]:bg-lime-300/10"
+              className="flex cursor-pointer items-start gap-3 rounded-xl border border-line-strong/60 p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/10"
             >
               <input
                 type="radio"
@@ -140,13 +140,13 @@ export function ProfileForm({
                 defaultChecked={profile.diet_preference === preference}
                 required
                 aria-describedby="diet-hint"
-                className="mt-1 accent-lime-300"
+                className="mt-1 accent-primary"
               />
               <span>
-                <span className="block text-sm font-semibold text-white">
+                <span className="block text-sm font-semibold text-ink">
                   {DIET_PREFERENCE_LABELS[preference]}
                 </span>
-                <span className="block text-xs text-zinc-400">
+                <span className="block text-xs text-muted">
                   {DIET_PREFERENCE_DESCRIPTIONS[preference]}
                 </span>
               </span>
@@ -154,17 +154,17 @@ export function ProfileForm({
           ))}
         </div>
         {dietError ? (
-          <p role="alert" className="text-xs text-red-300">
+          <p role="alert" className="text-xs text-danger">
             {dietError}
           </p>
         ) : null}
       </fieldset>
       <input type="hidden" name="timezone" value={timezone} />
-      <p className="text-xs text-zinc-400">Time zone: {timezone} (from this device)</p>
+      <p className="text-xs text-muted">Time zone: {timezone} (from this device)</p>
       {state.message ? (
         <p
           role="alert"
-          className="rounded-xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200"
+          className="rounded-xl border border-danger/20 bg-danger/10 p-3 text-sm text-danger"
         >
           {state.message}
         </p>

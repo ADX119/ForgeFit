@@ -31,6 +31,7 @@ import {
 import { CalendarDays, ChevronRight, Dumbbell, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Brand } from "@/components/brand";
+import { PALETTES, usePalette } from "@/components/palette";
 import { useToast } from "@/components/toast";
 
 const tokens = [
@@ -51,7 +52,7 @@ const tokens = [
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="grid gap-4">
-      <h2 className="text-lg font-semibold text-ink">{title}</h2>
+      <h2 className="text-xs font-medium uppercase tracking-[0.18em] text-muted">{title}</h2>
       {children}
     </section>
   );
@@ -62,18 +63,49 @@ export function DesignGallery() {
   const [weight, setWeight] = useState<number | null>(60);
   const [reps, setReps] = useState<number | null>(8);
   const [emailError, setEmailError] = useState(false);
+  const [palette, setPalette] = usePalette();
 
   return (
     <main className="mx-auto grid max-w-5xl gap-12 px-4 py-10 sm:px-8">
       <div className="flex items-center justify-between gap-4">
         <Brand />
-        <Badge tone="info">Development only</Badge>
+        <Badge>Development only</Badge>
       </div>
       <PageHeader
         eyebrow="Design system"
         title="ForgeFit components"
         description="Every shared component in its states. New screens are built only from these."
       />
+
+      <Section title="Palette (preview across the whole app)">
+        <div
+          role="radiogroup"
+          aria-label="Palette"
+          className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
+        >
+          {PALETTES.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={palette === option.id}
+              onClick={() => setPalette(option.id)}
+              className={`grid h-full content-start gap-1 rounded-xl border p-4 text-left transition-colors ${
+                palette === option.id
+                  ? "border-primary bg-raised"
+                  : "border-line bg-surface hover:border-line-strong"
+              }`}
+            >
+              <span className="text-sm font-medium text-ink">{option.name}</span>
+              <span className="text-xs text-muted">{option.note}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-sm text-muted">
+          Your choice is saved in this browser and applied to every page while developing, so you
+          can compare them on the real screens.
+        </p>
+      </Section>
 
       <Section title="Colour tokens">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -110,26 +142,33 @@ export function DesignGallery() {
       </Section>
 
       <Section title="Buttons">
-        <div className="flex flex-wrap items-center gap-3">
-          <Button>Start workout</Button>
-          <Button variant="secondary">Edit routine</Button>
-          <Button variant="ghost">Skip</Button>
-          <Button variant="danger">
-            <Trash2 className="size-4" /> Delete
-          </Button>
-          <Button loading>Saving…</Button>
-          <Button disabled>Disabled</Button>
-          <Button size="lg">Large (workout)</Button>
-          <Button size="sm" variant="secondary">
-            Small
-          </Button>
-          <Button size="icon" variant="ghost" aria-label="Edit">
-            <Pencil className="size-4" />
-          </Button>
-          <a href="#buttons" className={buttonClasses({ variant: "secondary" })}>
-            Link styled as a button
-          </a>
-        </div>
+        <Card className="grid gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Button>Start workout</Button>
+            <Button variant="secondary">Edit routine</Button>
+            <Button variant="ghost">Skip</Button>
+            <Button variant="danger">
+              <Trash2 className="size-4" /> Delete
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Button loading>Saving…</Button>
+            <Button disabled>Disabled</Button>
+            <a href="#buttons" className={buttonClasses({ variant: "secondary" })}>
+              Link as button
+            </a>
+            <Button size="icon" variant="ghost" aria-label="Edit" className="justify-self-start">
+              <Pencil className="size-4" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 items-center gap-3">
+            <Button size="sm" variant="secondary">
+              Small
+            </Button>
+            <Button variant="secondary">Medium</Button>
+            <Button size="lg">Large (workout)</Button>
+          </div>
+        </Card>
       </Section>
 
       <Section title="Badges">

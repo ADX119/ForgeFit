@@ -104,21 +104,21 @@ export function DemoOffers({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <Card className="z-[10000] max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-b-none border-white/12 bg-zinc-950 p-0 sm:rounded-2xl">
-            <div className="sticky top-0 z-10 flex flex-col gap-3 border-b border-white/8 bg-zinc-950 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <Card className="z-[10000] max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-b-none border-line bg-canvas p-0 sm:rounded-2xl">
+            <div className="sticky top-0 z-10 flex flex-col gap-3 border-b border-line bg-canvas p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <Badge tone="orange">
                   {offers.some((offer) => !offer.demo) ? "Live offers" : "Demo · no charge"}
                 </Badge>
-                <h2 className="mt-3 text-xl font-black">{sourceName}</h2>
-                <p className="mt-2 text-sm text-zinc-400">
+                <h2 className="mt-3 text-xl font-semibold">{sourceName}</h2>
+                <p className="mt-2 text-sm text-muted">
                   Offers are either demo flows or direct provider search links. Use the button to
                   review the item or place a demo order.
                 </p>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="grid size-11 place-items-center rounded-xl text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                className="grid size-11 place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink"
                 aria-label="Close offers"
               >
                 <X className="size-5" />
@@ -126,39 +126,39 @@ export function DemoOffers({
             </div>
             <div className="grid gap-3 p-5">
               {result ? (
-                <div className="rounded-xl border border-lime-300/20 bg-lime-300/10 p-5 text-center">
-                  <CheckCircle2 className="mx-auto size-9 text-lime-300" />
-                  <h3 className="mt-3 font-black">Order placed</h3>
-                  <p className="mt-2 text-sm leading-6 text-zinc-300">{result.message}</p>
+                <div className="rounded-xl border border-primary/20 bg-primary/10 p-5 text-center">
+                  <CheckCircle2 className="mx-auto size-9 text-primary" />
+                  <h3 className="mt-3 font-semibold">Order placed</h3>
+                  <p className="mt-2 text-sm leading-6 text-ink/85">{result.message}</p>
                   {result.provider ? (
-                    <p className="mt-2 text-xs text-zinc-400">Provider: {result.provider}</p>
+                    <p className="mt-2 text-xs text-muted">Provider: {result.provider}</p>
                   ) : null}
                 </div>
               ) : loadingOffers ? (
-                <div className="rounded-xl border border-white/12 bg-zinc-900 p-5 text-center">
-                  <LoaderCircle className="mx-auto size-9 animate-spin text-zinc-400" />
-                  <p className="mt-3 text-sm text-zinc-400">Loading offers…</p>
+                <div className="rounded-xl border border-line bg-surface p-5 text-center">
+                  <LoaderCircle className="mx-auto size-9 animate-spin text-muted" />
+                  <p className="mt-3 text-sm text-muted">Loading offers…</p>
                 </div>
               ) : offersError ? (
-                <div className="rounded-xl border border-rose-300/20 bg-rose-300/10 p-5 text-center text-rose-100">
+                <div className="rounded-xl border border-danger/20 bg-danger/10 p-5 text-center text-ink">
                   <p className="font-bold">Unable to load offers</p>
-                  <p className="mt-2 text-sm text-rose-100">{offersError}</p>
+                  <p className="mt-2 text-sm text-ink">{offersError}</p>
                 </div>
               ) : offers.length ? (
                 offers.map((offer) => (
                   <div
                     key={offer.id}
-                    className="flex items-center gap-4 rounded-xl border border-white/8 bg-zinc-900 p-4"
+                    className="flex items-center gap-4 rounded-xl border border-line bg-surface p-4"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="font-bold">{offer.provider}</p>
-                      <p className="mt-1 text-sm text-zinc-300">{offer.label}</p>
-                      <p className="mt-2 text-xs text-zinc-400">
+                      <p className="mt-1 text-sm text-ink/85">{offer.label}</p>
+                      <p className="mt-2 text-xs text-muted">
                         Est. ₹{offer.priceInr.toLocaleString("en-IN")} · {offer.etaMinutes} min
                         {offer.demo ? " · Demo item" : " · Live search"}
                       </p>
                       {!offer.demo ? (
-                        <p className="mt-2 text-xs text-zinc-400">
+                        <p className="mt-2 text-xs text-muted">
                           Estimated price from provider search — open provider to see live pricing
                           and availability.
                         </p>
@@ -175,8 +175,8 @@ export function DemoOffers({
                   </div>
                 ))
               ) : (
-                <div className="rounded-xl border border-white/12 bg-zinc-900 p-5 text-center">
-                  <p className="text-sm text-zinc-400">
+                <div className="rounded-xl border border-line bg-surface p-5 text-center">
+                  <p className="text-sm text-muted">
                     No offers are available for this item right now.
                   </p>
                 </div>

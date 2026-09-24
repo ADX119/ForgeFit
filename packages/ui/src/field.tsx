@@ -30,7 +30,7 @@ function FieldShell({
   className?: string;
 }) {
   return (
-    <div className={cn("grid gap-1.5", className)}>
+    <div className={cn("grid content-start gap-1.5", className)}>
       <label htmlFor={id} className="text-sm font-medium text-ink">
         {label}
       </label>
@@ -151,7 +151,7 @@ export function NumberStepper({
   const buttonClasses =
     "grid size-11 shrink-0 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-40";
   return (
-    <div className={cn("grid gap-1.5", className)}>
+    <div className={cn("grid content-start gap-1.5", className)}>
       <label htmlFor={id} className={cn("text-sm font-medium text-ink", hideLabel && "sr-only")}>
         {label}
       </label>

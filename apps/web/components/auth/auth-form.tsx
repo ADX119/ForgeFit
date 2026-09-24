@@ -46,14 +46,14 @@ export function AuthForm({
           Name
           <input className="input" autoComplete="name" {...register("displayName")} />
           {errors.displayName ? (
-            <span className="text-xs text-red-300">{errors.displayName.message}</span>
+            <span className="text-xs text-danger">{errors.displayName.message}</span>
           ) : null}
         </label>
       ) : null}
       <label className="label">
         Email
         <input className="input" type="email" autoComplete="email" {...register("email")} />
-        {errors.email ? <span className="text-xs text-red-300">{errors.email.message}</span> : null}
+        {errors.email ? <span className="text-xs text-danger">{errors.email.message}</span> : null}
       </label>
       <label className="label">
         Password
@@ -64,13 +64,13 @@ export function AuthForm({
           {...register("password")}
         />
         {errors.password ? (
-          <span className="text-xs text-red-300">{errors.password.message}</span>
+          <span className="text-xs text-danger">{errors.password.message}</span>
         ) : null}
       </label>
       {mode === "login" ? (
         <Link
           href="/forgot-password"
-          className="justify-self-end text-xs font-bold text-lime-300 hover:text-lime-200"
+          className="justify-self-end text-xs font-bold text-primary hover:text-primary-hover"
         >
           Forgot password?
         </Link>
@@ -78,7 +78,7 @@ export function AuthForm({
       {state.message ? (
         <p
           role="status"
-          className={`flex gap-2 rounded-xl border p-3 text-sm ${state.status === "error" ? "border-red-400/20 bg-red-400/10 text-red-200" : "border-lime-300/20 bg-lime-300/10 text-lime-200"}`}
+          className={`flex gap-2 rounded-xl border p-3 text-sm ${state.status === "error" ? "border-danger/20 bg-danger/10 text-danger" : "border-primary/20 bg-primary/10 text-primary-hover"}`}
         >
           {state.status === "error" ? (
             <AlertCircle className="mt-0.5 size-4 shrink-0" />

@@ -35,7 +35,7 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
       <div className="grid gap-3 lg:grid-cols-[1fr_repeat(3,minmax(150px,0.35fr))]">
         <label className="relative">
           <span className="sr-only">Search exercises</span>
-          <Search className="absolute left-3 top-3.5 size-4 text-zinc-400" />
+          <Search className="absolute left-3 top-3.5 size-4 text-muted" />
           <input
             className="input pl-10"
             placeholder="Search exercises…"
@@ -82,17 +82,17 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
           {filtered.map((exercise) => (
             <Card key={exercise.id} className="flex flex-col">
               <div className="flex items-start justify-between gap-4">
-                <div className="grid size-12 place-items-center rounded-xl bg-lime-300/10 text-lime-300">
+                <div className="grid size-12 place-items-center rounded-xl bg-primary/10 text-primary">
                   <Dumbbell className="size-6" />
                 </div>
                 <Badge>{exercise.difficulty}</Badge>
               </div>
-              <p className="mt-5 text-xs font-black uppercase tracking-wider text-lime-300">
+              <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-primary">
                 {exercise.muscle.name}
               </p>
-              <h2 className="mt-1 text-xl font-black">{exercise.name}</h2>
-              <p className="mt-2 flex-1 text-sm leading-6 text-zinc-400">{exercise.description}</p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
+              <h2 className="mt-1 text-xl font-semibold">{exercise.name}</h2>
+              <p className="mt-2 flex-1 text-sm leading-6 text-muted">{exercise.description}</p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted">
                 <span>{exercise.suggested_sets} sets</span>
                 <span>·</span>
                 <span>{exercise.suggested_reps} reps</span>
@@ -109,15 +109,15 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
                 )}
               </div>
               {exercise.steps?.length ? (
-                <details className="mt-4 rounded-2xl border border-white/10 bg-zinc-950/80 p-4 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-center justify-between text-sm font-bold text-sky-300">
+                <details className="mt-4 rounded-2xl border border-line bg-canvas/80 p-4 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer items-center justify-between text-sm font-bold text-secondary">
                     Step-by-step instructions
-                    <span className="text-xs text-zinc-400">{exercise.steps.length} steps</span>
+                    <span className="text-xs text-muted">{exercise.steps.length} steps</span>
                   </summary>
-                  <ol className="mt-4 space-y-3 text-sm text-zinc-300">
+                  <ol className="mt-4 space-y-3 text-sm text-ink/85">
                     {exercise.steps.map((step) => (
-                      <li key={step.position} className="space-y-1 rounded-xl bg-white/5 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-zinc-400">
+                      <li key={step.position} className="space-y-1 rounded-xl bg-raised p-3">
+                        <p className="text-xs uppercase tracking-[0.18em] text-muted">
                           Step {step.position}
                         </p>
                         <p>{step.instruction}</p>
@@ -140,7 +140,7 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
                   ))}
                 </select>
                 <PendingButton
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-lime-300 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-lime-200 disabled:opacity-60"
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-on-primary hover:bg-primary-hover disabled:opacity-60"
                   icon={<Plus className="size-4" />}
                 >
                   Add

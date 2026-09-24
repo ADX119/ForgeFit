@@ -19,7 +19,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
     <div className="grid gap-7">
       <Link
         href="/diet"
-        className="inline-flex w-fit items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white"
+        className="inline-flex w-fit items-center gap-2 text-sm font-bold text-muted hover:text-ink"
       >
         <ArrowLeft className="size-4" /> Back to recipes
       </Link>
@@ -33,18 +33,18 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               </Badge>
             ))}
           </div>
-          <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">{recipe.name}</h1>
-          <p className="mt-4 max-w-2xl leading-7 text-zinc-400">{recipe.description}</p>
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">{recipe.name}</h1>
+          <p className="mt-4 max-w-2xl leading-7 text-muted">{recipe.description}</p>
           {mismatch ? (
             <p
               role="note"
-              className="mt-4 max-w-2xl rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-100"
+              className="mt-4 max-w-2xl rounded-xl border border-warning/30 bg-warning/10 p-3 text-sm text-ink"
             >
               This recipe doesn&apos;t match your {DIET_PREFERENCE_LABELS[preference].toLowerCase()}{" "}
               preference. Check the ingredients and alternatives before cooking.
             </p>
           ) : null}
-          <div className="mt-5 flex flex-wrap gap-5 text-sm font-bold text-zinc-400">
+          <div className="mt-5 flex flex-wrap gap-5 text-sm font-bold text-muted">
             <span className="flex items-center gap-2">
               <Clock className="size-4" />
               {recipe.prep_time_minutes} min
@@ -71,10 +71,10 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           ["Fat", recipe.fat_g, "g"],
         ].map(([label, value, unit]) => (
           <Card key={label} className="p-4">
-            <p className="text-xs text-zinc-400">{label}</p>
-            <p className="mt-1 text-2xl font-black">
+            <p className="text-xs text-muted">{label}</p>
+            <p className="mt-1 text-2xl font-semibold">
               {value}
-              <span className="ml-1 text-xs text-zinc-400">{unit}</span>
+              <span className="ml-1 text-xs text-muted">{unit}</span>
             </p>
           </Card>
         ))}
@@ -83,20 +83,20 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-wider text-lime-300">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                 Shopping list
               </p>
-              <h2 className="mt-1 text-xl font-black">Ingredients</h2>
+              <h2 className="mt-1 text-xl font-semibold">Ingredients</h2>
             </div>
-            <ShoppingBasket className="size-5 text-zinc-400" />
+            <ShoppingBasket className="size-5 text-muted" />
           </div>
-          <div className="mt-5 divide-y divide-white/8">
+          <div className="mt-5 divide-y divide-line">
             {recipe.ingredients?.map((ingredient) => (
               <div key={ingredient.id} className="py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-bold">{ingredient.name}</p>
-                    <p className="mt-1 text-xs text-zinc-400">
+                    <p className="mt-1 text-xs text-muted">
                       {ingredient.quantity} {ingredient.unit}
                     </p>
                   </div>
@@ -109,9 +109,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                   />
                 </div>
                 {ingredient.alternatives.length ? (
-                  <p className="mt-2 text-xs text-zinc-400">
+                  <p className="mt-2 text-xs text-muted">
                     Alternatives: {ingredient.alternatives.map((item) => item.name).join(", ")}{" "}
-                    <span className="text-zinc-400">· adjust quantities as needed</span>
+                    <span className="text-muted">· adjust quantities as needed</span>
                   </p>
                 ) : null}
               </div>
@@ -133,7 +133,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               defaultValue={recipe.servings}
             />
             <PendingButton
-              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-lime-300 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-lime-200 disabled:opacity-60"
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-on-primary hover:bg-primary-hover disabled:opacity-60"
               icon={<ListPlus className="size-4" />}
             >
               Add to groceries
@@ -141,17 +141,17 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           </ActionForm>
         </Card>
         <Card>
-          <p className="text-xs font-black uppercase tracking-wider text-orange-300">Method</p>
-          <h2 className="mt-1 text-xl font-black">Cook it step by step</h2>
+          <p className="text-xs font-semibold uppercase tracking-wider text-nutrition">Method</p>
+          <h2 className="mt-1 text-xl font-semibold">Cook it step by step</h2>
           <ol className="mt-6 grid gap-5">
             {recipe.steps
               ?.sort((a, b) => a.position - b.position)
               .map((step) => (
                 <li key={step.position} className="flex gap-4">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-orange-300/10 font-black text-orange-300">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-nutrition/10 font-semibold text-nutrition">
                     {step.position}
                   </span>
-                  <p className="pt-1 text-sm leading-6 text-zinc-300">{step.instruction}</p>
+                  <p className="pt-1 text-sm leading-6 text-ink/85">{step.instruction}</p>
                 </li>
               ))}
           </ol>

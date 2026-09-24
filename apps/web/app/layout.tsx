@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
+import { PaletteBridge } from "@/components/palette";
 import { PwaRegister } from "@/components/pwa-register";
 import { ToastProvider } from "@/components/toast";
 import "./globals.css";
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "ForgeFit" },
 };
 
-export const viewport: Viewport = { themeColor: "#09090b", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#0a0a0a", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <body>
         <ToastProvider>{children}</ToastProvider>
         <PwaRegister />
+        {process.env.NODE_ENV === "production" ? null : <PaletteBridge />}
       </body>
     </html>
   );

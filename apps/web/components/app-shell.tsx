@@ -39,10 +39,10 @@ function NavLink({ item, variant }: { item: (typeof nav)[number]; variant: "tab"
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold text-zinc-400 transition hover:bg-zinc-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300",
+        "flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold text-muted transition hover:bg-raised hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         variant === "rail" &&
           "min-h-14 xl:min-h-12 xl:flex-row xl:justify-start xl:gap-3 xl:px-3 xl:text-sm xl:font-bold",
-        active && "bg-lime-300/10 text-lime-300",
+        active && "bg-primary/10 text-primary",
       )}
     >
       <Icon className="size-5 shrink-0" />
@@ -62,7 +62,7 @@ export function AppShell({
 }) {
   return (
     <div className="min-h-screen pb-24 md:pb-0 md:pl-20 xl:pl-64">
-      <aside className="fixed inset-y-0 left-0 top-0 z-30 hidden border-r border-white/8 bg-zinc-950/95 p-3 backdrop-blur md:flex md:w-20 md:flex-col xl:w-64 xl:p-5 overflow-y-auto">
+      <aside className="fixed inset-y-0 left-0 top-0 z-30 hidden border-r border-line bg-canvas/95 p-3 backdrop-blur md:flex md:w-20 md:flex-col xl:w-64 xl:p-5 overflow-y-auto">
         <div className="hidden xl:block">
           <Brand />
         </div>
@@ -74,10 +74,10 @@ export function AppShell({
             <NavLink key={item.href} item={item} variant="rail" />
           ))}
         </nav>
-        <div className="mt-auto hidden rounded-xl border border-white/8 bg-zinc-900 p-3 xl:block">
-          <p className="truncate text-sm font-bold text-white">{userName}</p>
+        <div className="mt-auto hidden rounded-xl border border-line bg-surface p-3 xl:block">
+          <p className="truncate text-sm font-bold text-ink">{userName}</p>
           <form action={signOutAction}>
-            <button className="mt-2 text-xs font-bold text-zinc-400 hover:text-red-300">
+            <button className="mt-2 text-xs font-bold text-muted hover:text-danger">
               Sign out
             </button>
           </form>
@@ -85,7 +85,7 @@ export function AppShell({
       </aside>
       <main className="mx-auto max-w-[1480px] p-5 sm:p-7 lg:p-9">{children}</main>
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-white/10 bg-zinc-950/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-canvas/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden"
         aria-label="Mobile primary"
       >
         {nav

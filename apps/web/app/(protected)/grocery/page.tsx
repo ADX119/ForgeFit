@@ -32,7 +32,7 @@ export default async function GroceryPage() {
               </a>
               {checkedCount ? (
                 <ActionForm action={clearCheckedGroceries}>
-                  <PendingButton className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white disabled:opacity-60">
+                  <PendingButton className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-ink/85 hover:bg-raised hover:text-ink disabled:opacity-60">
                     Clear {checkedCount} checked
                   </PendingButton>
                 </ActionForm>
@@ -43,7 +43,7 @@ export default async function GroceryPage() {
       />
       {items.length ? (
         <Card className="p-0">
-          <div className="divide-y divide-white/8">
+          <div className="divide-y divide-line">
             {items.map((item) => (
               <div
                 key={item.id}
@@ -53,7 +53,7 @@ export default async function GroceryPage() {
                   <input type="hidden" name="itemId" value={item.id} />
                   <input type="hidden" name="checked" value={item.checked ? "false" : "true"} />
                   <PendingButton
-                    className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${item.checked ? "border-lime-300 bg-lime-300 text-zinc-950" : "border-zinc-500 text-zinc-400 hover:border-lime-300 hover:text-lime-300"}`}
+                    className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${item.checked ? "border-primary bg-primary text-on-primary" : "border-line-strong text-muted hover:border-primary hover:text-primary"}`}
                     label={`${item.checked ? "Uncheck" : "Check"} ${item.name}`}
                     icon={<Check className="size-5" />}
                   />
@@ -62,7 +62,7 @@ export default async function GroceryPage() {
                   <p className={`font-bold ${item.checked ? "line-through" : ""}`}>
                     {item.selected_alternative ?? item.name}
                   </p>
-                  <p className="mt-1 text-xs text-zinc-400">
+                  <p className="mt-1 text-xs text-muted">
                     {item.quantity} {item.unit}
                     {item.selected_alternative
                       ? ` · alternative for ${item.name}, adjust as needed`
@@ -72,7 +72,7 @@ export default async function GroceryPage() {
                 <ActionForm action={removeGroceryItem}>
                   <input type="hidden" name="itemId" value={item.id} />
                   <PendingButton
-                    className="grid size-11 place-items-center rounded-xl text-zinc-400 hover:bg-red-400/10 hover:text-red-300 disabled:opacity-60"
+                    className="grid size-11 place-items-center rounded-xl text-muted hover:bg-danger/10 hover:text-danger disabled:opacity-60"
                     label={`Remove ${item.name}`}
                     icon={<Trash2 className="size-4" />}
                   />
@@ -87,7 +87,7 @@ export default async function GroceryPage() {
           title="Your grocery list is clear"
           description="Open a recipe and add its scaled ingredients here in one tap."
           action={
-            <Link href="/diet" className="font-bold text-lime-300">
+            <Link href="/diet" className="font-bold text-primary">
               Browse recipes
             </Link>
           }

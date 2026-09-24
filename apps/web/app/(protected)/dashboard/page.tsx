@@ -20,16 +20,16 @@ export default async function DashboardPage() {
       />
       <section className="grid gap-4 lg:grid-cols-[1.25fr_0.75fr]">
         <Card className="p-0">
-          <div className="flex items-center justify-between border-b border-white/8 p-5">
+          <div className="flex items-center justify-between border-b border-line p-5">
             <div>
-              <p className="text-xs font-black uppercase tracking-wider text-lime-300">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                 Today’s workout
               </p>
-              <h2 className="mt-1 text-xl font-black">
+              <h2 className="mt-1 text-xl font-semibold">
                 {completed} of {entries.length} complete
               </h2>
             </div>
-            <div className="grid size-14 place-items-center rounded-full border-4 border-lime-300 text-sm font-black">
+            <div className="grid size-14 place-items-center rounded-full border-4 border-primary text-sm font-semibold">
               {progress}%
             </div>
           </div>
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
               {entries.map((entry) => (
                 <div
                   key={entry.id}
-                  className="flex items-center gap-3 rounded-xl border border-white/7 bg-zinc-950/40 p-3"
+                  className="flex items-center gap-3 rounded-xl border border-line bg-canvas/40 p-3"
                 >
                   <ActionForm action={setWorkoutCompletion}>
                     <input type="hidden" name="entryId" value={entry.id} />
@@ -50,17 +50,17 @@ export default async function DashboardPage() {
                     />
                     <PendingButton
                       label={`${entry.completed ? "Mark incomplete" : "Complete"} ${entry.exercise.name}`}
-                      className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${entry.completed ? "border-lime-300 bg-lime-300 text-zinc-950" : "border-zinc-500 text-zinc-400 hover:border-lime-300 hover:text-lime-300"}`}
+                      className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${entry.completed ? "border-primary bg-primary text-on-primary" : "border-line-strong text-muted hover:border-primary hover:text-primary"}`}
                       icon={<Check className="size-5" />}
                     />
                   </ActionForm>
                   <div className="min-w-0 flex-1">
                     <p
-                      className={`font-bold ${entry.completed ? "text-zinc-400 line-through" : "text-white"}`}
+                      className={`font-bold ${entry.completed ? "text-muted line-through" : "text-ink"}`}
                     >
                       {entry.exercise.name}
                     </p>
-                    <p className="mt-1 text-xs text-zinc-400">
+                    <p className="mt-1 text-xs text-muted">
                       {entry.exercise.suggested_sets} sets · {entry.exercise.suggested_reps} reps
                     </p>
                   </div>
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
                 action={
                   <Link
                     href="/exercises"
-                    className="inline-flex items-center gap-2 font-bold text-lime-300"
+                    className="inline-flex items-center gap-2 font-bold text-primary"
                   >
                     <Plus className="size-4" /> Add exercises
                   </Link>
@@ -87,17 +87,17 @@ export default async function DashboardPage() {
         </Card>
         <Card className="flex flex-col">
           <div className="flex items-center justify-between">
-            <div className="grid size-11 place-items-center rounded-xl bg-orange-300/10 text-orange-300">
+            <div className="grid size-11 place-items-center rounded-xl bg-nutrition/10 text-nutrition">
               <Flame className="size-5" />
             </div>
             <Badge tone="orange">Estimate</Badge>
           </div>
-          <h2 className="mt-5 text-lg font-black">Daily nutrition target</h2>
+          <h2 className="mt-5 text-lg font-semibold">Daily nutrition target</h2>
           {target ? (
             <>
-              <p className="mt-2 text-4xl font-black tracking-tight">
+              <p className="mt-2 text-4xl font-semibold tracking-tight">
                 {target.calories.toLocaleString("en-IN")}{" "}
-                <span className="text-base text-zinc-400">kcal</span>
+                <span className="text-base text-muted">kcal</span>
               </p>
               <div className="mt-6 grid grid-cols-3 gap-2">
                 {[
@@ -105,16 +105,16 @@ export default async function DashboardPage() {
                   ["Carbs", target.carbsG],
                   ["Fat", target.fatG],
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-xl bg-zinc-950 p-3">
-                    <p className="text-[11px] text-zinc-400">{label}</p>
-                    <p className="mt-1 font-black">{value}g</p>
+                  <div key={label} className="rounded-xl bg-canvas p-3">
+                    <p className="text-[11px] text-muted">{label}</p>
+                    <p className="mt-1 font-semibold">{value}g</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-auto pt-6 text-xs leading-5 text-zinc-400">{target.disclaimer}</p>
+              <p className="mt-auto pt-6 text-xs leading-5 text-muted">{target.disclaimer}</p>
             </>
           ) : (
-            <p className="mt-3 text-sm text-zinc-400">
+            <p className="mt-3 text-sm text-muted">
               Complete your profile to calculate an estimate.
             </p>
           )}
@@ -146,11 +146,11 @@ export default async function DashboardPage() {
             },
           ].map(({ href, icon: Icon, title, body }) => (
             <Link href={href as Route} key={href}>
-              <Card className="group h-full hover:border-lime-300/25">
-                <Icon className="size-6 text-lime-300" />
-                <h3 className="mt-5 font-black">{title}</h3>
-                <p className="mt-2 text-sm text-zinc-400">{body}</p>
-                <ArrowRight className="mt-5 size-4 text-zinc-400 transition group-hover:translate-x-1 group-hover:text-lime-300" />
+              <Card className="group flex h-full flex-col hover:border-line-strong/60">
+                <Icon className="size-6 text-primary" />
+                <h3 className="mt-5 font-semibold">{title}</h3>
+                <p className="mt-2 mb-5 text-sm text-muted">{body}</p>
+                <ArrowRight className="mt-auto size-4 shrink-0 pt-0 text-muted transition group-hover:translate-x-1 group-hover:text-ink" />
               </Card>
             </Link>
           ))}

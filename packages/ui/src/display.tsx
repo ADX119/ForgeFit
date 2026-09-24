@@ -4,7 +4,7 @@ import { cn } from "./utils";
 /** A group of related content. Not for decoration: no cards inside cards, no card for one line. */
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("rounded-2xl border border-line bg-surface p-5", className)} {...props} />
+    <div className={cn("rounded-xl border border-line bg-surface p-5", className)} {...props} />
   );
 }
 
@@ -35,9 +35,9 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold",
-        resolved === "neutral" && "border-line-strong/50 bg-raised text-muted",
-        resolved === "primary" && "border-primary/30 bg-primary/10 text-primary",
+        "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wider",
+        resolved === "neutral" && "border-line bg-raised text-muted",
+        resolved === "primary" && "border-primary/25 bg-primary/10 text-primary",
         resolved === "success" && "border-success/30 bg-success/10 text-success",
         resolved === "warning" && "border-warning/30 bg-warning/10 text-warning",
         resolved === "danger" && "border-danger/30 bg-danger/10 text-danger",
@@ -65,8 +65,12 @@ export function PageHeader({
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        {eyebrow ? <p className="mb-2 text-sm font-semibold text-primary">{eyebrow}</p> : null}
-        <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
+        {eyebrow ? (
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{title}</h1>
         {description ? (
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{description}</p>
         ) : null}
@@ -95,7 +99,7 @@ export function EmptyState({
           {icon}
         </div>
       ) : null}
-      <h2 className="text-lg font-semibold text-ink">{title}</h2>
+      <h2 className="text-base font-semibold text-ink">{title}</h2>
       <p className="mt-2 max-w-md text-sm text-muted">{description}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </Card>
@@ -126,9 +130,14 @@ export function StatTile({
   className?: string;
 }) {
   return (
-    <div className={cn("rounded-xl border border-line bg-raised p-4", className)}>
-      <p className="text-xs font-medium text-muted">{label}</p>
-      <p className="mt-1 text-2xl font-bold tabular-nums text-ink">
+    <div
+      className={cn(
+        "flex h-full min-h-24 flex-col justify-between gap-2 rounded-xl border border-line bg-surface p-4",
+        className,
+      )}
+    >
+      <p className="text-[11px] font-medium uppercase tracking-wider text-muted">{label}</p>
+      <p className="text-2xl font-semibold tabular-nums text-ink">
         {value}
         {unit ? <span className="ml-1 text-sm font-medium text-muted">{unit}</span> : null}
       </p>

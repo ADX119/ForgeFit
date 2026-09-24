@@ -47,21 +47,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             role={toast.tone === "error" ? "alert" : "status"}
             className={`pointer-events-auto flex max-w-md items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-xl shadow-black/40 ${
               toast.tone === "error"
-                ? "border-red-400/30 bg-zinc-900 text-red-100"
-                : "border-lime-300/30 bg-zinc-900 text-zinc-100"
+                ? "border-danger/30 bg-surface text-ink"
+                : "border-primary/30 bg-surface text-ink"
             }`}
           >
             {toast.tone === "error" ? (
-              <AlertCircle className="mt-0.5 size-4 shrink-0 text-red-300" />
+              <AlertCircle className="mt-0.5 size-4 shrink-0 text-danger" />
             ) : (
-              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-lime-300" />
+              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
             )}
             <p className="flex-1">{toast.message}</p>
             <button
               type="button"
               onClick={() => setToast(null)}
               aria-label="Dismiss notification"
-              className="-m-1 grid size-7 place-items-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              className="-m-1 grid size-7 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink"
             >
               <X className="size-4" />
             </button>

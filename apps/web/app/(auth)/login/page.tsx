@@ -23,9 +23,9 @@ export default async function LoginPage({
         <LinkError message="That confirmation link is invalid or has expired. Sign in if you already confirmed, or register again for a new link." />
       ) : null}
       <AuthForm mode="login" action={login} />
-      <p className="mt-6 text-center text-sm text-zinc-400">
+      <p className="mt-6 text-center text-sm text-muted">
         New to ForgeFit?{" "}
-        <Link className="font-bold text-lime-300" href="/register">
+        <Link className="font-bold text-primary" href="/register">
           Create an account
         </Link>
       </p>

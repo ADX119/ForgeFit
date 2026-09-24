@@ -31,7 +31,7 @@ export function SimpleActionForm({
       {state.message ? (
         <p
           role="status"
-          className={`rounded-xl border p-3 text-sm ${state.status === "error" ? "border-red-400/20 text-red-200" : "border-lime-300/20 text-lime-200"}`}
+          className={`rounded-xl border p-3 text-sm ${state.status === "error" ? "border-danger/20 text-danger" : "border-primary/20 text-primary-hover"}`}
         >
           {state.message}
         </p>
@@ -40,7 +40,7 @@ export function SimpleActionForm({
         {pending ? <LoaderCircle className="size-4 animate-spin" /> : null}
         {type === "email" ? "Send reset link" : "Update password"}
       </Button>
-      <Link href="/login" className="text-center text-sm font-bold text-zinc-400 hover:text-white">
+      <Link href="/login" className="text-center text-sm font-bold text-muted hover:text-ink">
         Back to sign in
       </Link>
     </form>

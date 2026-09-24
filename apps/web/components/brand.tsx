@@ -4,14 +4,14 @@ export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+      className="inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label="ForgeFit home"
     >
-      <span className="grid size-10 place-items-center rounded-xl bg-lime-300 font-black text-zinc-950">
+      <span className="grid size-10 place-items-center rounded-xl bg-primary font-semibold text-on-primary">
         F
       </span>
       {!compact ? (
-        <span className="text-lg font-black tracking-tight text-white">ForgeFit</span>
+        <span className="text-lg font-semibold tracking-tight text-ink">ForgeFit</span>
       ) : null}
     </Link>
   );

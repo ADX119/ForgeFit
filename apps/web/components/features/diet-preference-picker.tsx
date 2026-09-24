@@ -20,14 +20,12 @@ export function DietPreferencePicker({ current }: { current: DietPreference | nu
             aria-pressed={current === preference}
             className={`grid h-full w-full gap-1 rounded-xl border p-4 text-left transition disabled:opacity-60 ${
               current === preference
-                ? "border-lime-300 bg-lime-300/10"
-                : "border-zinc-600 hover:border-zinc-400"
+                ? "border-primary bg-primary/10"
+                : "border-line-strong/60 hover:border-muted"
             }`}
           >
             <DietMark diet={preference} />
-            <span className="text-sm text-zinc-400">
-              {DIET_PREFERENCE_DESCRIPTIONS[preference]}
-            </span>
+            <span className="text-sm text-muted">{DIET_PREFERENCE_DESCRIPTIONS[preference]}</span>
           </PendingButton>
         </ActionForm>
       ))}
