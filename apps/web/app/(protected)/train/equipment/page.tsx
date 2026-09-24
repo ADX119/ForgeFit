@@ -88,10 +88,10 @@ export default async function EquipmentPage() {
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-secondary underline-offset-4 hover:underline"
                         >
-                          {providerName(provider)}
+                          <span aria-hidden="true">{providerName(provider)}</span>
                           <ExternalLink className="size-3.5" aria-hidden="true" />
                           <span className="sr-only">
-                            : search for {item.name} (opens in a new tab)
+                            Search {item.name} on {providerName(provider)} (opens in a new tab)
                           </span>
                         </a>
                       ))}
