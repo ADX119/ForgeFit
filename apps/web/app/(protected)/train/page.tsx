@@ -1,6 +1,6 @@
 import { default as NextLink } from "next/link";
 import { Check, Plus, Trash2 } from "lucide-react";
-import { Badge, Button, Card, PageHeader } from "@forgefit/ui";
+import { Badge, buttonClasses, Card, PageHeader } from "@forgefit/ui";
 import { ActionForm, PendingButton } from "@/components/action-form";
 import { removeWorkoutEntry, setWorkoutCompletion } from "@/lib/actions/features";
 import { getWorkout } from "@/lib/data/queries";
@@ -17,10 +17,8 @@ export default async function WorkoutPage() {
         title="Your week, built deliberately"
         description="A repeatable plan is more valuable than a perfect one. Start small and distribute hard sessions."
         action={
-          <NextLink href="/exercises">
-            <Button>
-              <Plus className="size-4" /> Add exercise
-            </Button>
+          <NextLink href="/train/exercises" className={buttonClasses()}>
+            <Plus className="size-4" aria-hidden="true" /> Add exercise
           </NextLink>
         }
       />
@@ -107,7 +105,7 @@ export default async function WorkoutPage() {
                 <p className="px-5 py-4 text-sm text-muted">
                   Rest day.{" "}
                   <NextLink
-                    href="/exercises"
+                    href="/train/exercises"
                     className="text-ink underline-offset-4 hover:underline"
                   >
                     Add an exercise

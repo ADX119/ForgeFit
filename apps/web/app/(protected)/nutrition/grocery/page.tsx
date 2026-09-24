@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Check, ListChecks, Trash2 } from "lucide-react";
-import { Button, Card, EmptyState, PageHeader } from "@forgefit/ui";
+import { buttonClasses, Card, EmptyState, PageHeader } from "@forgefit/ui";
 import { ActionForm, PendingButton } from "@/components/action-form";
 import {
   clearCheckedGroceries,
@@ -27,8 +27,8 @@ export default async function GroceryPage() {
         action={
           items.length ? (
             <div className="flex flex-wrap items-center gap-2">
-              <a href={orderAllUrl} target="_blank" rel="noreferrer">
-                <Button>Order full list</Button>
+              <a href={orderAllUrl} target="_blank" rel="noreferrer" className={buttonClasses()}>
+                Order full list
               </a>
               {checkedCount ? (
                 <ActionForm action={clearCheckedGroceries}>
@@ -87,7 +87,7 @@ export default async function GroceryPage() {
           title="Your grocery list is clear"
           description="Open a recipe and add its scaled ingredients here in one tap."
           action={
-            <Link href="/diet" className="font-bold text-primary">
+            <Link href="/nutrition" className="font-bold text-primary">
               Browse recipes
             </Link>
           }

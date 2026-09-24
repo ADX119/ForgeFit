@@ -13,7 +13,7 @@ export default function OfflinePage() {
           never cached on this device.
         </p>
         <Link
-          href="/dashboard"
+          href="/today"
           className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-on-primary hover:bg-primary-hover"
         >
           <RefreshCw className="size-4" /> Try again

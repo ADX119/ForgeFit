@@ -5,6 +5,17 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@forgefit/domain", "@forgefit/supabase", "@forgefit/ui"],
   typedRoutes: true,
   turbopack: { root: path.resolve(process.cwd(), "../..") },
+  // Routes from before the four-section navigation. Temporary (307) while the structure settles.
+  async redirects() {
+    return [
+      { source: "/dashboard", destination: "/today", permanent: false },
+      { source: "/workout", destination: "/train", permanent: false },
+      { source: "/exercises", destination: "/train/exercises", permanent: false },
+      { source: "/diet", destination: "/nutrition", permanent: false },
+      { source: "/grocery", destination: "/nutrition/grocery", permanent: false },
+      { source: "/recipes/:id", destination: "/nutrition/recipes/:id", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

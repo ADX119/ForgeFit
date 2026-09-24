@@ -76,7 +76,7 @@ export default async function DietPage() {
               {mealPlanRecipes.map((recipe) => (
                 <Link
                   key={recipe.id}
-                  href={`/recipes/${recipe.id}` as Route}
+                  href={`/nutrition/recipes/${recipe.id}` as Route}
                   className="block rounded-2xl border border-line bg-canvas/80 p-4 hover:border-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <div className="flex items-center justify-between gap-4">

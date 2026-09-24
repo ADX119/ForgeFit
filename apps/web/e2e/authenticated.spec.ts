@@ -22,18 +22,18 @@ test.describe("authenticated ForgeFit journey", () => {
       page.url().includes("onboarding"),
       "Complete the test account profile before running the journey.",
     );
-    await page.goto("/exercises");
+    await page.goto("/train/exercises");
     const pushUp = page
       .getByRole("heading", { name: "Push-up" })
       .locator("..", { hasText: "Push-up" });
     await pushUp.getByRole("button", { name: "Add" }).click();
-    await page.goto("/workout");
+    await page.goto("/train");
     await expect(page.getByText("Push-up")).toBeVisible();
 
-    await page.goto("/diet");
+    await page.goto("/nutrition");
     await page.getByRole("link", { name: /Paneer Power Bowl/i }).click();
     await page.getByRole("button", { name: /Add to groceries/i }).click();
-    await page.goto("/grocery");
+    await page.goto("/nutrition/grocery");
     await expect(page.getByText("Paneer")).toBeVisible();
 
     await page.goto("/shop");

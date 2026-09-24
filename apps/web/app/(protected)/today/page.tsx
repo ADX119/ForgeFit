@@ -75,7 +75,7 @@ export default async function DashboardPage() {
                 description="Add exercises to today and ForgeFit will surface them here."
                 action={
                   <Link
-                    href="/exercises"
+                    href="/train/exercises"
                     className="inline-flex items-center gap-2 font-bold text-primary"
                   >
                     <Plus className="size-4" /> Add exercises
@@ -127,19 +127,19 @@ export default async function DashboardPage() {
         <div className="mt-4 grid grid-auto gap-4">
           {[
             {
-              href: "/workout",
+              href: "/train",
               icon: Target,
               title: "Shape this week",
               body: "Balance your plan across seven days.",
             },
             {
-              href: "/diet",
+              href: "/nutrition",
               icon: Utensils,
               title: "Choose the next meal",
               body: "Find a recipe aligned to your goal.",
             },
             {
-              href: "/grocery",
+              href: "/nutrition/grocery",
               icon: Plus,
               title: "Review groceries",
               body: "Check off everything added from recipes.",

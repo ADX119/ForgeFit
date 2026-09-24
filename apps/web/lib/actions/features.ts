@@ -71,8 +71,8 @@ export async function addWorkoutEntry(formData: FormData): Promise<MutationResul
     )
     .select("id");
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/workout");
-  revalidatePath("/dashboard");
+  revalidatePath("/train");
+  revalidatePath("/today");
   revalidatePath("/shop");
   const dayName = DAY_NAMES[parsed.data.dayOfWeek - 1];
   // ignoreDuplicates returns no row when the exercise was already on that day.
@@ -86,8 +86,8 @@ export async function removeWorkoutEntry(formData: FormData): Promise<MutationRe
   if (!session) return fail(SIGNED_OUT);
   const { error } = await session.supabase.from("workout_entries").delete().eq("id", id.data);
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/workout");
-  revalidatePath("/dashboard");
+  revalidatePath("/train");
+  revalidatePath("/today");
   revalidatePath("/shop");
   return ok("Removed from your plan.");
 }
@@ -129,8 +129,8 @@ export async function setWorkoutCompletion(formData: FormData): Promise<Mutation
         .eq("entry_id", entryId)
         .eq("completion_date", completionDate);
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/dashboard");
-  revalidatePath("/workout");
+  revalidatePath("/today");
+  revalidatePath("/train");
   return ok();
 }
 
@@ -147,7 +147,7 @@ export async function addRecipeToGrocery(formData: FormData): Promise<MutationRe
     p_servings: parsed.data.servings,
   });
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/grocery");
+  revalidatePath("/nutrition/grocery");
   return ok("Ingredients added to your grocery list.");
 }
 
@@ -164,7 +164,7 @@ export async function updateGroceryItem(formData: FormData): Promise<MutationRes
     changes.selected_alternative = String(selectedAlternative) || null;
   const { error } = await session.supabase.from("grocery_items").update(changes).eq("id", id.data);
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/grocery");
+  revalidatePath("/nutrition/grocery");
   return ok();
 }
 
@@ -175,7 +175,7 @@ export async function removeGroceryItem(formData: FormData): Promise<MutationRes
   if (!session) return fail(SIGNED_OUT);
   const { error } = await session.supabase.from("grocery_items").delete().eq("id", id.data);
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/grocery");
+  revalidatePath("/nutrition/grocery");
   return ok("Removed from your list.");
 }
 
@@ -188,7 +188,7 @@ export async function clearCheckedGroceries(): Promise<MutationResult> {
     .eq("user_id", session.user.id)
     .eq("checked", true);
   if (error) return fail(TRY_AGAIN);
-  revalidatePath("/grocery");
+  revalidatePath("/nutrition/grocery");
   return ok("Checked items cleared.");
 }
 

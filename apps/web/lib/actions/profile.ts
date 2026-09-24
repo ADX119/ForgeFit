@@ -44,7 +44,7 @@ export async function saveProfile(
       message: "Your profile didn't save. Check your connection and try again.",
     };
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect("/today");
 }
 
 export async function saveDietPreference(formData: FormData): Promise<MutationResult> {
@@ -60,7 +60,7 @@ export async function saveDietPreference(formData: FormData): Promise<MutationRe
     .update({ diet_preference: parsed.data.dietPreference })
     .eq("id", user.id);
   if (error) return fail("That didn't save. Check your connection and try again.");
-  revalidatePath("/diet");
+  revalidatePath("/nutrition");
   revalidatePath("/profile");
   return ok("Recipes now match how you eat.");
 }

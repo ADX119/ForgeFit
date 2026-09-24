@@ -65,7 +65,7 @@ export function RecipeCatalog({
         <div className="grid grid-auto gap-4">
           {filtered.map((recipe) => (
             <Link
-              href={`/recipes/${recipe.id}` as Route}
+              href={`/nutrition/recipes/${recipe.id}` as Route}
               key={recipe.id}
               className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >

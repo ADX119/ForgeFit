@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "ForgeFit — Fitness, Diet & Shopping",
     short_name: "ForgeFit",
     description: "A unified fitness, nutrition, grocery, and equipment companion.",
-    start_url: "/dashboard",
+    start_url: "/today",
     display: "standalone",
     background_color: "#0a0a0a",
     theme_color: "#0a0a0a",

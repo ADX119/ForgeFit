@@ -18,7 +18,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   return (
     <div className="grid gap-7">
       <Link
-        href="/diet"
+        href="/nutrition"
         className="inline-flex w-fit items-center gap-2 text-sm font-bold text-muted hover:text-ink"
       >
         <ArrowLeft className="size-4" /> Back to recipes

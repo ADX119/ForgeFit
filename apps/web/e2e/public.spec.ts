@@ -14,11 +14,11 @@ test("manifest is installable and does not cache private routes", async ({ reque
   expect(manifest.ok()).toBeTruthy();
   const body = await manifest.json();
   expect(body.display).toBe("standalone");
-  expect(body.start_url).toBe("/dashboard");
+  expect(body.start_url).toBe("/today");
 
   const serviceWorker = await request.get("/sw.js");
   const source = await serviceWorker.text();
   expect(source).toContain('const SHELL = ["/offline"');
-  expect(source).not.toContain("/dashboard");
+  expect(source).not.toContain("/today");
   expect(source).not.toContain("supabase");
 });

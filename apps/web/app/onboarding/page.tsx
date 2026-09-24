@@ -15,7 +15,7 @@ export default async function OnboardingPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  if (profile?.onboarding_completed) redirect("/dashboard");
+  if (profile?.onboarding_completed) redirect("/today");
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
       <Brand />
