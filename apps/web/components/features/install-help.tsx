@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@fitforge/ui";
+import { Button } from "@forgefit/ui";
 import { Download } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
@@ -34,7 +34,7 @@ export function InstallHelp() {
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
   if (standalone)
-    return <p className="text-sm font-bold text-lime-300">FitForge is installed on this device.</p>;
+    return <p className="text-sm font-bold text-lime-300">ForgeFit is installed on this device.</p>;
   return (
     <div>
       <Button
@@ -45,9 +45,9 @@ export function InstallHelp() {
         }}
       >
         <Download className="size-4" />
-        Install FitForge
+        Install ForgeFit
       </Button>
-      <p className="mt-3 text-xs leading-5 text-zinc-500">
+      <p className="mt-3 text-xs leading-5 text-zinc-400">
         {prompt
           ? "Install for a standalone app experience."
           : "On iPhone or iPad, use Share → Add to Home Screen."}

@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@fitforge/domain", "@fitforge/supabase", "@fitforge/ui"],
+  transpilePackages: ["@forgefit/domain", "@forgefit/supabase", "@forgefit/ui"],
   typedRoutes: true,
   turbopack: { root: path.resolve(process.cwd(), "../..") },
   async headers() {

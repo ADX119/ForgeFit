@@ -1,9 +1,10 @@
 "use client";
 
-import { Badge, Button, Card, EmptyState } from "@fitforge/ui";
+import { Badge, Card, EmptyState } from "@forgefit/ui";
 import { Dumbbell, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ExerciseView } from "@/lib/data/queries";
+import { ActionForm, PendingButton } from "@/components/action-form";
 import { addWorkoutEntry } from "@/lib/actions/features";
 
 export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
@@ -34,7 +35,7 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
       <div className="grid gap-3 lg:grid-cols-[1fr_repeat(3,minmax(150px,0.35fr))]">
         <label className="relative">
           <span className="sr-only">Search exercises</span>
-          <Search className="absolute left-3 top-3.5 size-4 text-zinc-500" />
+          <Search className="absolute left-3 top-3.5 size-4 text-zinc-400" />
           <input
             className="input pl-10"
             placeholder="Search exercises…"
@@ -91,7 +92,7 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
               </p>
               <h2 className="mt-1 text-xl font-black">{exercise.name}</h2>
               <p className="mt-2 flex-1 text-sm leading-6 text-zinc-400">{exercise.description}</p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-zinc-500">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
                 <span>{exercise.suggested_sets} sets</span>
                 <span>·</span>
                 <span>{exercise.suggested_reps} reps</span>
@@ -116,14 +117,16 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
                   <ol className="mt-4 space-y-3 text-sm text-zinc-300">
                     {exercise.steps.map((step) => (
                       <li key={step.position} className="space-y-1 rounded-xl bg-white/5 p-3">
-                        <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Step {step.position}</p>
+                        <p className="text-xs uppercase tracking-[0.18em] text-zinc-400">
+                          Step {step.position}
+                        </p>
                         <p>{step.instruction}</p>
                       </li>
                     ))}
                   </ol>
                 </details>
               ) : null}
-              <form action={addWorkoutEntry} className="mt-5 flex gap-2">
+              <ActionForm action={addWorkoutEntry} className="mt-5 flex gap-2">
                 <input type="hidden" name="exerciseId" value={exercise.id} />
                 <select
                   className="input min-w-0"
@@ -136,10 +139,13 @@ export function ExerciseCatalog({ exercises }: { exercises: ExerciseView[] }) {
                     </option>
                   ))}
                 </select>
-                <Button type="submit" className="shrink-0">
-                  <Plus className="size-4" /> Add
-                </Button>
-              </form>
+                <PendingButton
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-lime-300 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-lime-200 disabled:opacity-60"
+                  icon={<Plus className="size-4" />}
+                >
+                  Add
+                </PendingButton>
+              </ActionForm>
             </Card>
           ))}
         </div>

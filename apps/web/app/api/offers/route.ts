@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createFoodDeliveryProvider, createShoppingProvider } from "@fitforge/domain";
+import { createFoodDeliveryProvider, createShoppingProvider } from "@forgefit/domain";
 
 export async function POST(request: Request) {
   const body = await request.json();

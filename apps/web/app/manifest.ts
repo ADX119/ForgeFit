@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "FitForge — Fitness, Diet & Shopping",
-    short_name: "FitForge",
+    name: "ForgeFit — Fitness, Diet & Shopping",
+    short_name: "ForgeFit",
     description: "A unified fitness, nutrition, grocery, and equipment companion.",
     start_url: "/dashboard",
     display: "standalone",

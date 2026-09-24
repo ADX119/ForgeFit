@@ -1,11 +1,20 @@
 "use client";
 
-import { Button } from "@fitforge/ui";
+import {
+  DIET_PREFERENCE_DESCRIPTIONS,
+  DIET_PREFERENCE_LABELS,
+  DIET_PREFERENCES,
+} from "@forgefit/domain";
+import { Button } from "@forgefit/ui";
 import { LoaderCircle } from "lucide-react";
-import { useActionState } from "react";
-import type { ProfileRow } from "@fitforge/supabase";
+import { useActionState, useSyncExternalStore } from "react";
+import type { ProfileRow } from "@forgefit/supabase";
 import { saveProfile } from "@/lib/actions/profile";
 import { initialActionState } from "@/lib/actions/state";
+
+// The device's time zone decides what "today" means for workouts. Read once on the client.
+const noopSubscribe = () => () => {};
+const deviceTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export function ProfileForm({
   profile,
@@ -15,6 +24,12 @@ export function ProfileForm({
   onboarding?: boolean;
 }) {
   const [state, action, pending] = useActionState(saveProfile, initialActionState);
+  const timezone = useSyncExternalStore(
+    noopSubscribe,
+    deviceTimeZone,
+    () => profile.timezone ?? "Asia/Kolkata",
+  );
+  const dietError = state.fieldErrors?.dietPreference?.[0];
   return (
     <form action={action} className="grid gap-5">
       <label className="label">
@@ -79,7 +94,7 @@ export function ProfileForm({
             <option value="FEMALE">Female</option>
             <option value="MALE">Male</option>
           </select>
-          <span className="text-xs font-normal leading-5 text-zinc-500">
+          <span className="text-xs font-normal leading-5 text-zinc-400">
             Used only for the calorie estimate.
           </span>
         </label>
@@ -107,7 +122,45 @@ export function ProfileForm({
           <option value="RECOMPOSITION">Recomposition</option>
         </select>
       </label>
-      <input type="hidden" name="timezone" value="Asia/Kolkata" />
+      <fieldset className="grid gap-3">
+        <legend className="label">How do you eat?</legend>
+        <p id="diet-hint" className="-mt-1 text-xs text-zinc-400">
+          Recipes are filtered to match. You can change this anytime.
+        </p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {DIET_PREFERENCES.map((preference) => (
+            <label
+              key={preference}
+              className="flex cursor-pointer items-start gap-3 rounded-xl border border-zinc-600 p-3 has-[:checked]:border-lime-300 has-[:checked]:bg-lime-300/10"
+            >
+              <input
+                type="radio"
+                name="dietPreference"
+                value={preference}
+                defaultChecked={profile.diet_preference === preference}
+                required
+                aria-describedby="diet-hint"
+                className="mt-1 accent-lime-300"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-white">
+                  {DIET_PREFERENCE_LABELS[preference]}
+                </span>
+                <span className="block text-xs text-zinc-400">
+                  {DIET_PREFERENCE_DESCRIPTIONS[preference]}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+        {dietError ? (
+          <p role="alert" className="text-xs text-red-300">
+            {dietError}
+          </p>
+        ) : null}
+      </fieldset>
+      <input type="hidden" name="timezone" value={timezone} />
+      <p className="text-xs text-zinc-400">Time zone: {timezone} (from this device)</p>
       {state.message ? (
         <p
           role="alert"

@@ -1,5 +1,5 @@
 import { Brand } from "@/components/brand";
-import { Card } from "@fitforge/ui";
+import { Card } from "@forgefit/ui";
 import type { ReactNode } from "react";
 
 export function AuthShell({
@@ -33,7 +33,7 @@ export function AuthShell({
             focused system.
           </p>
         </div>
-        <p className="text-xs text-zinc-600">
+        <p className="text-xs text-zinc-400">
           Fitness and nutrition estimates are educational, not medical advice.
         </p>
       </section>

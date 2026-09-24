@@ -1,10 +1,10 @@
 "use server";
 
-import { profileSchema } from "@fitforge/domain";
+import { dietPreferenceSchema, profileSchema } from "@forgefit/domain";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { ActionState } from "./state";
+import { fail, ok, type ActionState, type MutationResult } from "./state";
 
 export async function saveProfile(
   _previous: ActionState,
@@ -33,11 +33,34 @@ export async function saveProfile(
       calculation_sex: data.calculationSex,
       activity_level: data.activityLevel,
       goal: data.goal,
+      diet_preference: data.dietPreference,
       timezone: data.timezone,
       onboarding_completed: true,
     })
     .eq("id", user.id);
-  if (error) return { status: "error", message: error.message };
+  if (error)
+    return {
+      status: "error",
+      message: "Your profile didn't save. Check your connection and try again.",
+    };
   revalidatePath("/", "layout");
   redirect("/dashboard");
+}
+
+export async function saveDietPreference(formData: FormData): Promise<MutationResult> {
+  const parsed = dietPreferenceSchema.safeParse({ dietPreference: formData.get("dietPreference") });
+  if (!parsed.success) return fail("Choose one of the options.");
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return fail("You've been signed out. Sign in again to continue.");
+  const { error } = await supabase
+    .from("profiles")
+    .update({ diet_preference: parsed.data.dietPreference })
+    .eq("id", user.id);
+  if (error) return fail("That didn't save. Check your connection and try again.");
+  revalidatePath("/diet");
+  revalidatePath("/profile");
+  return ok("Recipes now match how you eat.");
 }

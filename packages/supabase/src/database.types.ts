@@ -2,9 +2,10 @@ import type {
   ActivityLevel,
   CalculationSex,
   DietGoal,
+  DietPreference,
   Difficulty,
   OrderType,
-} from "@fitforge/domain";
+} from "@forgefit/domain";
 
 export type Id = string;
 
@@ -17,6 +18,7 @@ export interface ProfileRow {
   calculation_sex: CalculationSex | null;
   activity_level: ActivityLevel | null;
   goal: DietGoal | null;
+  diet_preference: DietPreference | null;
   timezone: string;
   onboarding_completed: boolean;
   created_at: string;
@@ -46,6 +48,7 @@ export interface RecipeRow {
   protein_g: number;
   carbs_g: number;
   fat_g: number;
+  diet_type: DietPreference;
   image_path: string;
   description: string;
 }

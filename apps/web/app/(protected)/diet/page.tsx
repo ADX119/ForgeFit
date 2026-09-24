@@ -1,41 +1,36 @@
-import { Card, PageHeader } from "@fitforge/ui";
+import Link from "next/link";
+import type { Route } from "next";
+import { Card, PageHeader } from "@forgefit/ui";
+import { DIET_PREFERENCE_LABELS, recipeMatchesDiet } from "@forgefit/domain";
+import { DietMark } from "@/components/features/diet-mark";
+import { DietPreferencePicker } from "@/components/features/diet-preference-picker";
 import { RecipeCatalog } from "@/components/features/recipe-catalog";
-import { generateDietPlan, generateRecipeRecommendations } from "@fitforge/domain";
 import { getCurrentProfile, getRecipes } from "@/lib/data/queries";
 
 export default async function DietPage() {
   const [recipes, profile] = await Promise.all([getRecipes(), getCurrentProfile()]);
-  const recipeSuggestions =
-    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
-      ? await generateRecipeRecommendations(
-          {
-            age: profile.age,
-            heightCm: profile.height_cm,
-            weightKg: profile.weight_kg,
-            calculationSex: profile.calculation_sex,
-            activityLevel: profile.activity_level,
-            goal: profile.goal,
-          },
-        )
-      : "Complete your profile to see personalized meal ideas.";
-  const dietPlan =
-    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
-      ? await generateDietPlan(
-          {
-            age: profile.age,
-            heightCm: profile.height_cm,
-            weightKg: profile.weight_kg,
-            calculationSex: profile.calculation_sex,
-            activityLevel: profile.activity_level,
-            goal: profile.goal,
-          },
-        )
-      : "Complete your profile to see a personalized diet plan.";
+  const preference = profile.diet_preference;
 
-  const recommendedRecipes = recipes.filter((recipe) =>
+  if (!preference) {
+    return (
+      <div className="grid gap-8">
+        <PageHeader
+          eyebrow="Diet & nutrition"
+          title="How do you eat?"
+          description="We'll only suggest recipes that fit. You can change this anytime in your profile."
+        />
+        <DietPreferencePicker current={null} />
+      </div>
+    );
+  }
+
+  const suitable = recipes.filter((recipe) => recipeMatchesDiet(recipe.diet_type, preference));
+  const forGoal = suitable.filter((recipe) =>
     profile.goal ? recipe.goals.includes(profile.goal) : true,
   );
-  const mealPlanRecipes = recommendedRecipes.slice(0, 3);
+  // Some goal and diet combinations have few recipes; fall back to any suitable recipe.
+  const mealPlanRecipes = (forGoal.length ? forGoal : suitable).slice(0, 3);
+  const hiddenCount = recipes.length - suitable.length;
 
   return (
     <div className="grid gap-8">
@@ -44,44 +39,67 @@ export default async function DietPage() {
         title="Eat for the goal you chose"
         description="Macros are per serving and intentionally transparent. Adjust portions to match your target and appetite."
       />
+      <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-400">
+        <span>
+          Showing recipes for <DietMark diet={preference} />
+        </span>
+        {hiddenCount ? (
+          <span>
+            · {hiddenCount} {hiddenCount === 1 ? "recipe" : "recipes"} hidden
+          </span>
+        ) : null}
+        <Link href={"/profile" as Route} className="font-bold text-lime-300 hover:text-lime-200">
+          Change
+        </Link>
+      </p>
       <Card>
         <div className="grid gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-lime-300">Your meal plan</p>
-            <h2 className="mt-2 text-xl font-black">Real recipes from your database</h2>
+            <p className="text-xs font-bold uppercase tracking-wider text-lime-300">
+              Suggested for you
+            </p>
+            <h2 className="mt-2 text-xl font-black">
+              {forGoal.length ? "Recipes that match your goal" : "Recipes that match how you eat"}
+            </h2>
+            {!forGoal.length && suitable.length ? (
+              <p className="mt-1 text-sm text-zinc-400">
+                No {DIET_PREFERENCE_LABELS[preference].toLowerCase()} recipes are tagged for your
+                goal yet, so these are the closest fits.
+              </p>
+            ) : null}
           </div>
           {mealPlanRecipes.length ? (
             <div className="space-y-3">
               {mealPlanRecipes.map((recipe) => (
-                <div key={recipe.id} className="rounded-3xl border border-white/10 bg-zinc-950/80 p-4">
+                <Link
+                  key={recipe.id}
+                  href={`/recipes/${recipe.id}` as Route}
+                  className="block rounded-2xl border border-white/10 bg-zinc-950/80 p-4 hover:border-lime-300/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300"
+                >
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-sm font-semibold text-white">{recipe.name}</p>
-                      <p className="mt-1 text-xs text-zinc-500">{recipe.description}</p>
+                      <p className="mt-1 text-xs text-zinc-400">{recipe.description}</p>
                     </div>
-                    <div className="text-right text-xs text-zinc-400">
+                    <div className="shrink-0 text-right text-xs text-zinc-400">
                       <p>{recipe.prep_time_minutes} min</p>
                       <p>{recipe.calories_per_serving} kcal</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
-            <p className="text-sm leading-6 text-zinc-300">No recipes were found for your goal yet. Browse the recipe catalog below.</p>
+            <p className="text-sm leading-6 text-zinc-300">
+              No recipes match your diet preference yet. More are on the way.
+            </p>
           )}
         </div>
       </Card>
-      <Card>
-        <div className="grid gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-sky-300">AI-generated plan</p>
-            <h2 className="mt-2 text-xl font-black">Daily diet plan</h2>
-          </div>
-          <p className="whitespace-pre-wrap text-sm leading-6 text-zinc-300">{dietPlan}</p>
-        </div>
-      </Card>
-      <RecipeCatalog recipes={recipes} initialGoal={profile.goal ?? "ALL"} />
+      <RecipeCatalog
+        recipes={suitable}
+        initialGoal={forGoal.length && profile.goal ? profile.goal : "ALL"}
+      />
     </div>
   );
 }

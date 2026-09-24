@@ -1,15 +1,20 @@
 import { ArrowLeft, ChefHat, Clock, ListPlus, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge, Button, Card } from "@fitforge/ui";
+import { Badge, Card } from "@forgefit/ui";
+import { DIET_PREFERENCE_LABELS, recipeMatchesDiet } from "@forgefit/domain";
+import { ActionForm, PendingButton } from "@/components/action-form";
+import { DietMark } from "@/components/features/diet-mark";
 import { DemoOffers } from "@/components/features/demo-offers";
 import { addRecipeToGrocery } from "@/lib/actions/features";
-import { getRecipe } from "@/lib/data/queries";
+import { getCurrentProfile, getRecipe } from "@/lib/data/queries";
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const recipe = await getRecipe(id);
+  const [recipe, profile] = await Promise.all([getRecipe(id), getCurrentProfile()]);
   if (!recipe) notFound();
+  const preference = profile.diet_preference;
+  const mismatch = preference && !recipeMatchesDiet(recipe.diet_type, preference);
   return (
     <div className="grid gap-7">
       <Link
@@ -20,7 +25,8 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
       </Link>
       <header className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <DietMark diet={recipe.diet_type} />
             {recipe.goals.map((goal) => (
               <Badge tone="lime" key={goal}>
                 {goal.replaceAll("_", " ")}
@@ -29,7 +35,16 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           </div>
           <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">{recipe.name}</h1>
           <p className="mt-4 max-w-2xl leading-7 text-zinc-400">{recipe.description}</p>
-          <div className="mt-5 flex flex-wrap gap-5 text-sm font-bold text-zinc-500">
+          {mismatch ? (
+            <p
+              role="note"
+              className="mt-4 max-w-2xl rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-100"
+            >
+              This recipe doesn&apos;t match your {DIET_PREFERENCE_LABELS[preference].toLowerCase()}{" "}
+              preference. Check the ingredients and alternatives before cooking.
+            </p>
+          ) : null}
+          <div className="mt-5 flex flex-wrap gap-5 text-sm font-bold text-zinc-400">
             <span className="flex items-center gap-2">
               <Clock className="size-4" />
               {recipe.prep_time_minutes} min
@@ -56,10 +71,10 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           ["Fat", recipe.fat_g, "g"],
         ].map(([label, value, unit]) => (
           <Card key={label} className="p-4">
-            <p className="text-xs text-zinc-500">{label}</p>
+            <p className="text-xs text-zinc-400">{label}</p>
             <p className="mt-1 text-2xl font-black">
               {value}
-              <span className="ml-1 text-xs text-zinc-500">{unit}</span>
+              <span className="ml-1 text-xs text-zinc-400">{unit}</span>
             </p>
           </Card>
         ))}
@@ -73,7 +88,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               </p>
               <h2 className="mt-1 text-xl font-black">Ingredients</h2>
             </div>
-            <ShoppingBasket className="size-5 text-zinc-600" />
+            <ShoppingBasket className="size-5 text-zinc-400" />
           </div>
           <div className="mt-5 divide-y divide-white/8">
             {recipe.ingredients?.map((ingredient) => (
@@ -81,7 +96,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-bold">{ingredient.name}</p>
-                    <p className="mt-1 text-xs text-zinc-500">
+                    <p className="mt-1 text-xs text-zinc-400">
                       {ingredient.quantity} {ingredient.unit}
                     </p>
                   </div>
@@ -94,15 +109,15 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                   />
                 </div>
                 {ingredient.alternatives.length ? (
-                  <p className="mt-2 text-xs text-zinc-500">
+                  <p className="mt-2 text-xs text-zinc-400">
                     Alternatives: {ingredient.alternatives.map((item) => item.name).join(", ")}{" "}
-                    <span className="text-zinc-600">· adjust quantities as needed</span>
+                    <span className="text-zinc-400">· adjust quantities as needed</span>
                   </p>
                 ) : null}
               </div>
             ))}
           </div>
-          <form action={addRecipeToGrocery} className="mt-5 flex gap-2">
+          <ActionForm action={addRecipeToGrocery} className="mt-5 flex gap-2">
             <input type="hidden" name="recipeId" value={recipe.id} />
             <label className="sr-only" htmlFor="servings">
               Servings
@@ -117,10 +132,13 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               step="0.5"
               defaultValue={recipe.servings}
             />
-            <Button className="flex-1">
-              <ListPlus className="size-4" /> Add to groceries
-            </Button>
-          </form>
+            <PendingButton
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-lime-300 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-lime-200 disabled:opacity-60"
+              icon={<ListPlus className="size-4" />}
+            >
+              Add to groceries
+            </PendingButton>
+          </ActionForm>
         </Card>
         <Card>
           <p className="text-xs font-black uppercase tracking-wider text-orange-300">Method</p>

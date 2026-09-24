@@ -1,4 +1,4 @@
-const CACHE_NAME = "fitforge-shell-v1";
+const CACHE_NAME = "forgefit-shell-v1";
 const SHELL = ["/offline", "/icons/icon-192.svg", "/icons/icon-512.svg"];
 
 self.addEventListener("install", (event) => {

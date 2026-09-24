@@ -1,5 +1,5 @@
 {
-  "name": "@fitforge/web",
+  "name": "@forgefit/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,9 +12,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@fitforge/domain": "workspace:*",
-    "@fitforge/supabase": "workspace:*",
-    "@fitforge/ui": "workspace:*",
+    "@forgefit/domain": "workspace:*",
+    "@forgefit/supabase": "workspace:*",
+    "@forgefit/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.1",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.4",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@fitforge/config": "workspace:*",
+    "@forgefit/config": "workspace:*",
     "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4.1.13",
     "@testing-library/jest-dom": "^6.8.0",

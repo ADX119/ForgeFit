@@ -2,11 +2,12 @@
 
 import type { Route } from "next";
 import Link from "next/link";
-import { Badge, Card, EmptyState } from "@fitforge/ui";
+import { Badge, Card, EmptyState } from "@forgefit/ui";
 import { Clock, Search, UtensilsCrossed } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { DietGoal } from "@fitforge/domain";
+import type { DietGoal } from "@forgefit/domain";
 import type { RecipeView } from "@/lib/data/queries";
+import { DietMark } from "./diet-mark";
 
 const goals: { value: "ALL" | DietGoal; label: string }[] = [
   { value: "ALL", label: "All goals" },
@@ -40,7 +41,7 @@ export function RecipeCatalog({
       <div className="flex flex-col gap-3 lg:flex-row">
         <label className="relative flex-1">
           <span className="sr-only">Search recipes</span>
-          <Search className="absolute left-3 top-3.5 size-4 text-zinc-500" />
+          <Search className="absolute left-3 top-3.5 size-4 text-zinc-400" />
           <input
             className="input pl-10"
             placeholder="Search recipes…"
@@ -75,9 +76,12 @@ export function RecipeCatalog({
                   </div>
                   <Badge>{recipe.difficulty}</Badge>
                 </div>
-                <h2 className="mt-5 text-xl font-black">{recipe.name}</h2>
+                <div className="mt-5">
+                  <DietMark diet={recipe.diet_type} />
+                </div>
+                <h2 className="mt-2 text-xl font-black">{recipe.name}</h2>
                 <p className="mt-2 text-sm leading-6 text-zinc-400">{recipe.description}</p>
-                <div className="mt-5 flex items-center gap-4 text-xs font-bold text-zinc-500">
+                <div className="mt-5 flex items-center gap-4 text-xs font-bold text-zinc-400">
                   <span className="flex items-center gap-1">
                     <Clock className="size-4" />
                     {recipe.prep_time_minutes} min

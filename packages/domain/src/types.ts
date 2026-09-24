@@ -1,6 +1,9 @@
 export const DIET_GOALS = ["MUSCLE_GAIN", "FAT_LOSS", "MAINTENANCE", "RECOMPOSITION"] as const;
 export type DietGoal = (typeof DIET_GOALS)[number];
 
+export const DIET_PREFERENCES = ["VEGAN", "VEGETARIAN", "EGGETARIAN", "NON_VEGETARIAN"] as const;
+export type DietPreference = (typeof DIET_PREFERENCES)[number];
+
 export const ACTIVITY_LEVELS = [
   "SEDENTARY",
   "LIGHTLY_ACTIVE",

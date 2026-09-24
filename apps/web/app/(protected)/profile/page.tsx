@@ -1,6 +1,8 @@
-import { Badge, Card, PageHeader } from "@fitforge/ui";
+import { LogOut } from "lucide-react";
+import { Badge, Button, Card, PageHeader } from "@forgefit/ui";
 import { InstallHelp } from "@/components/features/install-help";
 import { ProfileForm } from "@/components/features/profile-form";
+import { signOut } from "@/lib/actions/auth";
 import { getCurrentProfile, getOrders } from "@/lib/data/queries";
 
 export default async function ProfilePage() {
@@ -9,20 +11,20 @@ export default async function ProfilePage() {
     <div className="grid gap-8">
       <PageHeader
         eyebrow="Profile & settings"
-        title="Your FitForge baseline"
+        title="Your ForgeFit baseline"
         description="Update the inputs behind your nutrition estimate and review recent simulated orders."
       />
       <div className="grid gap-5 xl:grid-cols-[1fr_0.8fr]">
         <Card>
           <h2 className="text-xl font-black">Personal details</h2>
-          <p className="mt-2 mb-6 text-sm text-zinc-500">Metric units · Asia/Kolkata</p>
+          <p className="mt-2 mb-6 text-sm text-zinc-400">Metric units · {profile.timezone}</p>
           <ProfileForm profile={profile} />
         </Card>
         <div className="grid content-start gap-5">
           <Card>
             <h2 className="text-xl font-black">Install the app</h2>
             <p className="mt-2 mb-5 text-sm leading-6 text-zinc-400">
-              Add FitForge to your home screen for faster access and a standalone window.
+              Add ForgeFit to your home screen for faster access and a standalone window.
             </p>
             <InstallHelp />
           </Card>
@@ -38,7 +40,7 @@ export default async function ProfilePage() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="font-bold">{order.source_name}</p>
-                        <p className="mt-1 text-xs text-zinc-500">
+                        <p className="mt-1 text-xs text-zinc-400">
                           {order.provider} · {order.order_type.toLowerCase()}
                         </p>
                       </div>
@@ -51,10 +53,22 @@ export default async function ProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="mt-5 text-sm text-zinc-500">
+              <p className="mt-5 text-sm text-zinc-400">
                 No demo orders yet. Try a recipe or equipment offer.
               </p>
             )}
+          </Card>
+          <Card>
+            <h2 className="text-xl font-black">Account</h2>
+            <p className="mt-2 mb-5 text-sm leading-6 text-zinc-400">
+              Sign out of ForgeFit on this device.
+            </p>
+            <form action={signOut}>
+              <Button variant="secondary">
+                <LogOut className="size-4" />
+                Sign out
+              </Button>
+            </form>
           </Card>
         </div>
       </div>

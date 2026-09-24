@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await -- providers are async by contract; real integrations will await network calls. */
 import type {
   CommerceOffer,
   DemoOrderResult,

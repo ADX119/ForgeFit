@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isSupabaseConfigured } from "@fitforge/supabase";
+import { isSupabaseConfigured } from "@forgefit/supabase";
 import { Brand } from "@/components/brand";
 import { SetupRequired } from "@/components/setup-required";
 import { ProfileForm } from "@/components/features/profile-form";
@@ -22,7 +22,7 @@ export default async function OnboardingPage() {
       <div className="mt-12">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-300">Your baseline</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
-          Shape FitForge around you.
+          Shape ForgeFit around you.
         </h1>
         <p className="mt-4 max-w-2xl leading-7 text-zinc-400">
           These details power your daily estimate and recipe goal. You can change them anytime.
@@ -34,7 +34,7 @@ export default async function OnboardingPage() {
           onboarding
         />
       </div>
-      <p className="mt-5 text-xs leading-5 text-zinc-600">
+      <p className="mt-5 text-xs leading-5 text-zinc-400">
         Adults 18+ only. Results are estimates and not a substitute for medical advice.
       </p>
     </main>

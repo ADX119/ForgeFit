@@ -1,4 +1,4 @@
-import { Card } from "@fitforge/ui";
+import { Card } from "@forgefit/ui";
 import { DatabaseZap } from "lucide-react";
 
 export function SetupRequired() {

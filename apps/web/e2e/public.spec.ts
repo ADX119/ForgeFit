@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("landing page communicates the complete FitForge loop", async ({ page }) => {
+test("landing page communicates the complete ForgeFit loop", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Build the body/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Start forging/i })).toBeVisible();

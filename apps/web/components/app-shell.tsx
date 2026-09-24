@@ -13,7 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { cn } from "@fitforge/ui";
+import { cn } from "@forgefit/ui";
 import { Brand } from "./brand";
 
 const nav: { href: Route; label: string; icon: typeof House; mobile: boolean }[] = [
@@ -26,7 +26,11 @@ const nav: { href: Route; label: string; icon: typeof House; mobile: boolean }[]
   { href: "/profile", label: "Profile", icon: UserRound, mobile: true },
 ];
 
-function NavLink({ item, compact = false }: { item: (typeof nav)[number]; compact?: boolean }) {
+/**
+ * "tab": icon over a small label (mobile bottom bar).
+ * "rail": icon over a small label on tablet, icon beside the label on desktop.
+ */
+function NavLink({ item, variant }: { item: (typeof nav)[number]; variant: "tab" | "rail" }) {
   const pathname = usePathname();
   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
   const Icon = item.icon;
@@ -35,13 +39,14 @@ function NavLink({ item, compact = false }: { item: (typeof nav)[number]; compac
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex min-h-12 items-center gap-3 rounded-xl px-3 text-sm font-bold text-zinc-400 transition hover:bg-zinc-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300",
+        "flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold text-zinc-400 transition hover:bg-zinc-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300",
+        variant === "rail" &&
+          "min-h-14 xl:min-h-12 xl:flex-row xl:justify-start xl:gap-3 xl:px-3 xl:text-sm xl:font-bold",
         active && "bg-lime-300/10 text-lime-300",
-        compact && "justify-center px-0",
       )}
     >
       <Icon className="size-5 shrink-0" />
-      {compact ? <span className="sr-only">{item.label}</span> : <span>{item.label}</span>}
+      <span>{item.label}</span>
     </Link>
   );
 }
@@ -66,13 +71,13 @@ export function AppShell({
         </div>
         <nav className="mt-10 grid gap-2" aria-label="Primary">
           {nav.map((item) => (
-            <NavLink key={item.href} item={item} compact={false} />
+            <NavLink key={item.href} item={item} variant="rail" />
           ))}
         </nav>
         <div className="mt-auto hidden rounded-xl border border-white/8 bg-zinc-900 p-3 xl:block">
           <p className="truncate text-sm font-bold text-white">{userName}</p>
           <form action={signOutAction}>
-            <button className="mt-2 text-xs font-bold text-zinc-500 hover:text-red-300">
+            <button className="mt-2 text-xs font-bold text-zinc-400 hover:text-red-300">
               Sign out
             </button>
           </form>
@@ -86,7 +91,7 @@ export function AppShell({
         {nav
           .filter((item) => item.mobile)
           .map((item) => (
-            <NavLink key={item.href} item={item} compact />
+            <NavLink key={item.href} item={item} variant="tab" />
           ))}
       </nav>
     </div>

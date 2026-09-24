@@ -12,7 +12,7 @@ export default function LoginPage() {
     >
       <AuthForm mode="login" action={login} />
       <p className="mt-6 text-center text-sm text-zinc-400">
-        New to FitForge?{" "}
+        New to ForgeFit?{" "}
         <Link className="font-bold text-lime-300" href="/register">
           Create an account
         </Link>

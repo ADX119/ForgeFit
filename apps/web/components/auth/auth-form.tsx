@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@fitforge/ui";
+import { Button } from "@forgefit/ui";
 import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useTransition } from "react";

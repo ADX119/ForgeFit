@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, ListChecks, Trash2 } from "lucide-react";
-import { Button, Card, EmptyState, PageHeader } from "@fitforge/ui";
+import { Button, Card, EmptyState, PageHeader } from "@forgefit/ui";
+import { ActionForm, PendingButton } from "@/components/action-form";
 import {
   clearCheckedGroceries,
   removeGroceryItem,
@@ -30,9 +31,11 @@ export default async function GroceryPage() {
                 <Button>Order full list</Button>
               </a>
               {checkedCount ? (
-                <form action={clearCheckedGroceries}>
-                  <Button variant="ghost">Clear {checkedCount} checked</Button>
-                </form>
+                <ActionForm action={clearCheckedGroceries}>
+                  <PendingButton className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white disabled:opacity-60">
+                    Clear {checkedCount} checked
+                  </PendingButton>
+                </ActionForm>
               ) : null}
             </div>
           ) : undefined
@@ -46,36 +49,34 @@ export default async function GroceryPage() {
                 key={item.id}
                 className={`flex items-center gap-3 p-4 sm:p-5 ${item.checked ? "opacity-55" : ""}`}
               >
-                <form action={updateGroceryItem}>
+                <ActionForm action={updateGroceryItem}>
                   <input type="hidden" name="itemId" value={item.id} />
                   <input type="hidden" name="checked" value={item.checked ? "false" : "true"} />
-                  <button
-                    className={`grid size-11 place-items-center rounded-xl border ${item.checked ? "border-lime-300 bg-lime-300 text-zinc-950" : "border-zinc-700 text-zinc-600 hover:border-lime-300 hover:text-lime-300"}`}
-                    aria-label={`${item.checked ? "Uncheck" : "Check"} ${item.name}`}
-                  >
-                    <Check className="size-5" />
-                  </button>
-                </form>
+                  <PendingButton
+                    className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${item.checked ? "border-lime-300 bg-lime-300 text-zinc-950" : "border-zinc-500 text-zinc-400 hover:border-lime-300 hover:text-lime-300"}`}
+                    label={`${item.checked ? "Uncheck" : "Check"} ${item.name}`}
+                    icon={<Check className="size-5" />}
+                  />
+                </ActionForm>
                 <div className="min-w-0 flex-1">
                   <p className={`font-bold ${item.checked ? "line-through" : ""}`}>
                     {item.selected_alternative ?? item.name}
                   </p>
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <p className="mt-1 text-xs text-zinc-400">
                     {item.quantity} {item.unit}
                     {item.selected_alternative
                       ? ` · alternative for ${item.name}, adjust as needed`
                       : ""}
                   </p>
                 </div>
-                <form action={removeGroceryItem}>
+                <ActionForm action={removeGroceryItem}>
                   <input type="hidden" name="itemId" value={item.id} />
-                  <button
-                    className="grid size-11 place-items-center rounded-xl text-zinc-600 hover:bg-red-400/10 hover:text-red-300"
-                    aria-label={`Remove ${item.name}`}
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
-                </form>
+                  <PendingButton
+                    className="grid size-11 place-items-center rounded-xl text-zinc-400 hover:bg-red-400/10 hover:text-red-300 disabled:opacity-60"
+                    label={`Remove ${item.name}`}
+                    icon={<Trash2 className="size-4" />}
+                  />
+                </ActionForm>
               </div>
             ))}
           </div>

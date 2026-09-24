@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-const email = process.env.FITFORGE_E2E_EMAIL;
-const password = process.env.FITFORGE_E2E_PASSWORD;
+const email = process.env.FORGEFIT_E2E_EMAIL;
+const password = process.env.FORGEFIT_E2E_PASSWORD;
 
-test.describe("authenticated FitForge journey", () => {
+test.describe("authenticated ForgeFit journey", () => {
   test.skip(
     !email || !password,
-    "Set FITFORGE_E2E_EMAIL and FITFORGE_E2E_PASSWORD for the seeded test account.",
+    "Set FORGEFIT_E2E_EMAIL and FORGEFIT_E2E_PASSWORD for the seeded test account.",
   );
 
   test.beforeEach(async ({ page }) => {

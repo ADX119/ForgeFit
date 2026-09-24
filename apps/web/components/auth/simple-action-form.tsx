@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@fitforge/ui";
+import { Button } from "@forgefit/ui";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";

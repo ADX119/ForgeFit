@@ -1,5 +1,5 @@
 import { PackageOpen, Sparkles } from "lucide-react";
-import { Badge, Card, PageHeader } from "@fitforge/ui";
+import { Badge, Card, PageHeader } from "@forgefit/ui";
 import { DemoOffers } from "@/components/features/demo-offers";
 import { getEquipment } from "@/lib/data/queries";
 
@@ -30,7 +30,7 @@ export default async function ShopPage() {
       </section>
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <PackageOpen className="size-5 text-zinc-500" />
+          <PackageOpen className="size-5 text-zinc-400" />
           <h2 className="text-xl font-black">All equipment</h2>
         </div>
         <div className="grid grid-auto gap-4">
@@ -58,12 +58,13 @@ function EquipmentCard({
         </div>
       ) : null}
       <div className="mt-5 grid size-14 place-items-center rounded-xl bg-zinc-800">
-        <PackageOpen className="size-7 text-zinc-500" />
+        <PackageOpen className="size-7 text-zinc-400" />
       </div>
       <h3 className="mt-5 text-xl font-black">{item.name}</h3>
       <p className="mt-2 flex-1 text-sm leading-6 text-zinc-400">{item.description}</p>
       <p className="mt-5 text-2xl font-black">
-        ₹{item.mock_price_inr.toLocaleString("en-IN")} <span className="text-xs font-bold text-orange-300">DB DEMO</span>
+        ₹{item.mock_price_inr.toLocaleString("en-IN")}{" "}
+        <span className="text-xs font-bold text-orange-300">DB DEMO</span>
       </p>
       <div className="mt-4">
         <DemoOffers type="EQUIPMENT" sourceId={item.id} sourceName={item.name} label="Buy · Demo" />

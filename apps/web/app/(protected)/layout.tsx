@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { isSupabaseConfigured } from "@fitforge/supabase";
+import { isSupabaseConfigured } from "@forgefit/supabase";
 import { AppShell } from "@/components/app-shell";
 import { SetupRequired } from "@/components/setup-required";
 import { signOut } from "@/lib/actions/auth";

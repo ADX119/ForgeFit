@@ -1,5 +1,5 @@
 {
-  "name": "@fitforge/supabase",
+  "name": "@forgefit/supabase",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,12 +13,12 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@fitforge/domain": "workspace:*",
+    "@forgefit/domain": "workspace:*",
     "@supabase/supabase-js": "^2.57.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@fitforge/config": "workspace:*",
+    "@forgefit/config": "workspace:*",
     "@types/node": "^24.3.0",
     "eslint": "^9.35.0",
     "typescript": "^5.9.2",

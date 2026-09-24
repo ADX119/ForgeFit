@@ -1,5 +1,12 @@
 import { z } from "zod";
-import { ACTIVITY_LEVELS, CALCULATION_SEXES, DIET_GOALS, ORDER_TYPES } from "./types";
+import { DEFAULT_TIME_ZONE, isValidTimeZone } from "./time";
+import {
+  ACTIVITY_LEVELS,
+  CALCULATION_SEXES,
+  DIET_GOALS,
+  DIET_PREFERENCES,
+  ORDER_TYPES,
+} from "./types";
 
 export const profileSchema = z.object({
   displayName: z.string().trim().min(2).max(80),
@@ -9,7 +16,16 @@ export const profileSchema = z.object({
   calculationSex: z.enum(CALCULATION_SEXES),
   activityLevel: z.enum(ACTIVITY_LEVELS),
   goal: z.enum(DIET_GOALS),
-  timezone: z.string().min(1).default("Asia/Kolkata"),
+  dietPreference: z.enum(DIET_PREFERENCES, { error: "Choose how you eat." }),
+  timezone: z
+    .string()
+    .min(1)
+    .default(DEFAULT_TIME_ZONE)
+    .transform((value) => (isValidTimeZone(value) ? value : DEFAULT_TIME_ZONE)),
+});
+
+export const dietPreferenceSchema = z.object({
+  dietPreference: z.enum(DIET_PREFERENCES),
 });
 
 export const authSchema = z.object({

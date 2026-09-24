@@ -5,8 +5,59 @@ import {
   MockShoppingProvider,
   normalizeIngredientName,
   normalizeUnit,
+  recipeMatchesDiet,
   scaleQuantity,
+  zonedDay,
+  zonedWeekDates,
 } from "./index";
+
+describe("time zone helpers", () => {
+  // 2026-09-23T20:00:00Z is still Wednesday in New York but already Thursday in India.
+  const instant = new Date("2026-09-23T20:00:00Z");
+
+  it("resolves the calendar day in the user's time zone", () => {
+    expect(zonedDay("Asia/Kolkata", instant)).toEqual({
+      date: "2026-09-24",
+      dayOfWeek: 4,
+      weekday: "Thu",
+    });
+    expect(zonedDay("America/New_York", instant)).toMatchObject({
+      date: "2026-09-23",
+      dayOfWeek: 3,
+    });
+  });
+
+  it("falls back to the default zone for invalid input", () => {
+    expect(zonedDay("Not/AZone", instant).date).toBe("2026-09-24");
+  });
+
+  it("returns Monday to Sunday of the current week", () => {
+    expect(zonedWeekDates("Asia/Kolkata", instant)).toEqual([
+      "2026-09-21",
+      "2026-09-22",
+      "2026-09-23",
+      "2026-09-24",
+      "2026-09-25",
+      "2026-09-26",
+      "2026-09-27",
+    ]);
+  });
+});
+
+describe("diet preference", () => {
+  it("allows recipes at or below the preference's tier", () => {
+    expect(recipeMatchesDiet("VEGAN", "VEGETARIAN")).toBe(true);
+    expect(recipeMatchesDiet("EGGETARIAN", "VEGETARIAN")).toBe(false);
+    expect(recipeMatchesDiet("EGGETARIAN", "EGGETARIAN")).toBe(true);
+    expect(recipeMatchesDiet("NON_VEGETARIAN", "EGGETARIAN")).toBe(false);
+    expect(recipeMatchesDiet("VEGETARIAN", "VEGAN")).toBe(false);
+    expect(recipeMatchesDiet("NON_VEGETARIAN", "NON_VEGETARIAN")).toBe(true);
+  });
+
+  it("allows everything when no preference is set", () => {
+    expect(recipeMatchesDiet("NON_VEGETARIAN", null)).toBe(true);
+  });
+});
 
 describe("calculateMacroTarget", () => {
   it("calculates deterministic maintenance targets", () => {

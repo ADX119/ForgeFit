@@ -1,7 +1,7 @@
 "use client";
 
-import type { CommerceOffer, OrderType } from "@fitforge/domain";
-import { Badge, Button, Card } from "@fitforge/ui";
+import type { CommerceOffer, OrderType } from "@forgefit/domain";
+import { Badge, Button, Card } from "@forgefit/ui";
 import { CheckCircle2, LoaderCircle, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { placeDemoOrder } from "@/lib/actions/features";
@@ -107,9 +107,14 @@ export function DemoOffers({
           <Card className="z-[10000] max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-b-none border-white/12 bg-zinc-950 p-0 sm:rounded-2xl">
             <div className="sticky top-0 z-10 flex flex-col gap-3 border-b border-white/8 bg-zinc-950 p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <Badge tone="orange">{offers.some((offer) => !offer.demo) ? "Live offers" : "Demo · no charge"}</Badge>
+                <Badge tone="orange">
+                  {offers.some((offer) => !offer.demo) ? "Live offers" : "Demo · no charge"}
+                </Badge>
                 <h2 className="mt-3 text-xl font-black">{sourceName}</h2>
-                <p className="mt-2 text-sm text-zinc-400">Offers are either demo flows or direct provider search links. Use the button to review the item or place a demo order.</p>
+                <p className="mt-2 text-sm text-zinc-400">
+                  Offers are either demo flows or direct provider search links. Use the button to
+                  review the item or place a demo order.
+                </p>
               </div>
               <button
                 onClick={() => setOpen(false)}
@@ -126,7 +131,7 @@ export function DemoOffers({
                   <h3 className="mt-3 font-black">Order placed</h3>
                   <p className="mt-2 text-sm leading-6 text-zinc-300">{result.message}</p>
                   {result.provider ? (
-                    <p className="mt-2 text-xs text-zinc-500">Provider: {result.provider}</p>
+                    <p className="mt-2 text-xs text-zinc-400">Provider: {result.provider}</p>
                   ) : null}
                 </div>
               ) : loadingOffers ? (
@@ -145,26 +150,35 @@ export function DemoOffers({
                     key={offer.id}
                     className="flex items-center gap-4 rounded-xl border border-white/8 bg-zinc-900 p-4"
                   >
-                        <div className="min-w-0 flex-1">
-                          <p className="font-bold">{offer.provider}</p>
-                          <p className="mt-1 text-sm text-zinc-300">{offer.label}</p>
-                          <p className="mt-2 text-xs text-zinc-500">
-                            Est. ₹{offer.priceInr.toLocaleString("en-IN")} · {offer.etaMinutes} min
-                            {offer.demo ? " · Demo item" : " · Live search"}
-                          </p>
-                          {!offer.demo ? (
-                            <p className="mt-2 text-xs text-zinc-400">Estimated price from provider search — open provider to see live pricing and availability.</p>
-                          ) : null}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold">{offer.provider}</p>
+                      <p className="mt-1 text-sm text-zinc-300">{offer.label}</p>
+                      <p className="mt-2 text-xs text-zinc-400">
+                        Est. ₹{offer.priceInr.toLocaleString("en-IN")} · {offer.etaMinutes} min
+                        {offer.demo ? " · Demo item" : " · Live search"}
+                      </p>
+                      {!offer.demo ? (
+                        <p className="mt-2 text-xs text-zinc-400">
+                          Estimated price from provider search — open provider to see live pricing
+                          and availability.
+                        </p>
+                      ) : null}
                     </div>
                     <Button onClick={() => choose(offer)} disabled={pending}>
                       {pending ? <LoaderCircle className="size-4 animate-spin" /> : null}
-                      {offer.demo ? "Place demo order" : offer.externalUrl ? "Open provider" : "Select"}
+                      {offer.demo
+                        ? "Place demo order"
+                        : offer.externalUrl
+                          ? "Open provider"
+                          : "Select"}
                     </Button>
                   </div>
                 ))
               ) : (
                 <div className="rounded-xl border border-white/12 bg-zinc-900 p-5 text-center">
-                  <p className="text-sm text-zinc-400">No offers are available for this item right now.</p>
+                  <p className="text-sm text-zinc-400">
+                    No offers are available for this item right now.
+                  </p>
                 </div>
               )}
             </div>

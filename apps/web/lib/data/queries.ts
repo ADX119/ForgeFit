@@ -1,5 +1,6 @@
 import "server-only";
-import { calculateMacroTarget, type DietGoal } from "@fitforge/domain";
+import { cache } from "react";
+import { calculateMacroTarget, zonedDay, zonedWeekDates, type DietGoal } from "@forgefit/domain";
 import type {
   EquipmentRow,
   ExerciseRow,
@@ -7,7 +8,7 @@ import type {
   MockOrderRow,
   ProfileRow,
   RecipeRow,
-} from "@fitforge/supabase";
+} from "@forgefit/supabase";
 import { createClient } from "@/lib/supabase/server";
 
 export interface ExerciseView extends ExerciseRow {
@@ -18,7 +19,7 @@ export interface ExerciseView extends ExerciseRow {
 
 export interface RecipeView extends RecipeRow {
   goals: DietGoal[];
-  ingredients?: (import("@fitforge/supabase").IngredientRow & {
+  ingredients?: (import("@forgefit/supabase").IngredientRow & {
     alternatives: { id: string; name: string }[];
   })[];
   steps?: { position: number; instruction: string }[];
@@ -31,23 +32,8 @@ export interface WorkoutEntryView {
   completed?: boolean;
 }
 
-function indiaToday() {
-  const now = new Date();
-  const date = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
-  const weekday = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Kolkata",
-    weekday: "short",
-  }).format(now);
-  const day = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(weekday) + 1;
-  return { date, day: day || 1, weekday };
-}
-
-export async function getCurrentProfile(): Promise<ProfileRow> {
+// Cached per request: pages and their queries share one auth check and one profile read.
+export const getCurrentProfile = cache(async (): Promise<ProfileRow> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -56,12 +42,12 @@ export async function getCurrentProfile(): Promise<ProfileRow> {
   const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   if (error || !data) throw new Error(error?.message ?? "Profile not found");
   return data as ProfileRow;
-}
+});
 
 export async function getDashboard() {
   const supabase = await createClient();
   const profile = await getCurrentProfile();
-  const today = indiaToday();
+  const today = zonedDay(profile.timezone);
   const { data: plan } = await supabase
     .from("workout_plans")
     .select("id")
@@ -72,7 +58,7 @@ export async function getDashboard() {
         .from("workout_entries")
         .select("id,day_of_week,exercises(id,name,suggested_sets,suggested_reps,difficulty)")
         .eq("workout_plan_id", plan.id)
-        .eq("day_of_week", today.day)
+        .eq("day_of_week", today.dayOfWeek)
         .order("created_at")
     : { data: [] };
   const entryIds = (entriesData ?? []).map((entry) => entry.id);
@@ -142,32 +128,31 @@ export async function getWorkout() {
         .order("day_of_week")
     : { data: [] };
 
-  // Determine today's date in India so we can surface completion state
-  const now = new Date();
-  const completionDate = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
-
+  const today = zonedDay(profile.timezone);
+  const weekDates = zonedWeekDates(profile.timezone);
   const entryIds = (entries ?? []).map((entry) => entry.id);
   const { data: completions } = entryIds.length
     ? await supabase
         .from("workout_completions")
-        .select("entry_id")
+        .select("entry_id,completion_date")
         .in("entry_id", entryIds)
-        .eq("completion_date", completionDate)
+        .gte("completion_date", weekDates[0]!)
+        .lte("completion_date", weekDates[6]!)
     : { data: [] };
-  const completeIds = new Set((completions ?? []).map((item) => item.entry_id));
+  const completedKeys = new Set(
+    (completions ?? []).map((item) => `${item.entry_id}:${item.completion_date}`),
+  );
 
   return {
     plan,
+    today,
+    weekDates,
     entries: (entries ?? []).map((entry) => ({
       id: entry.id,
       day_of_week: entry.day_of_week,
       exercise: entry.exercises,
-      completed: completeIds.has(entry.id),
+      // Done means completed on this week's date for the entry's own weekday.
+      completed: completedKeys.has(`${entry.id}:${weekDates[entry.day_of_week - 1]}`),
     })) as unknown as WorkoutEntryView[],
   };
 }
@@ -201,7 +186,7 @@ export async function getRecipe(id: string): Promise<RecipeView | null> {
     steps: data.recipe_steps,
     ingredients: data.ingredients.map(
       (
-        item: import("@fitforge/supabase").IngredientRow & {
+        item: import("@forgefit/supabase").IngredientRow & {
           ingredient_alternatives: { id: string; name: string }[];
         },
       ) => ({ ...item, alternatives: item.ingredient_alternatives }),

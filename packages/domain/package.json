@@ -1,5 +1,5 @@
 {
-  "name": "@fitforge/domain",
+  "name": "@forgefit/domain",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@fitforge/config": "workspace:*",
+    "@forgefit/config": "workspace:*",
     "eslint": "^9.35.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.42.0",

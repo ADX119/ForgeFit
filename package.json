@@ -1,5 +1,5 @@
 {
-  "name": "fitforge",
+  "name": "forgefit",
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.15.1",
@@ -14,7 +14,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "test:e2e": "pnpm --filter @fitforge/web test:e2e"
+    "test:e2e": "pnpm --filter @forgefit/web test:e2e"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

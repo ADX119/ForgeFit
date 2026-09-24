@@ -1,32 +1,14 @@
 import { default as NextLink } from "next/link";
-import { CalendarDays, Plus, Trash2, Check } from "lucide-react";
-import { Badge, Button, Card, EmptyState, PageHeader } from "@fitforge/ui";
+import { CalendarDays, Check, Plus, Trash2 } from "lucide-react";
+import { Badge, Button, Card, EmptyState, PageHeader } from "@forgefit/ui";
+import { ActionForm, PendingButton } from "@/components/action-form";
 import { removeWorkoutEntry, setWorkoutCompletion } from "@/lib/actions/features";
-import { getCurrentProfile, getWorkout } from "@/lib/data/queries";
-import { generateWorkoutPlan } from "@fitforge/domain";
+import { getWorkout } from "@/lib/data/queries";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-function indiaTodayString() {
-  const now = new Date();
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
-}
-
 export default async function WorkoutPage() {
-  const [profile, { entries }] = await Promise.all([getCurrentProfile(), getWorkout()]);
-  const workoutPlanSummary =
-    profile.age !== null && profile.height_cm !== null && profile.weight_kg !== null && profile.calculation_sex !== null && profile.activity_level !== null && profile.goal !== null
-      ? await generateWorkoutPlan({
-          age: profile.age,
-          heightCm: profile.height_cm,
-          weightKg: profile.weight_kg,
-          calculationSex: profile.calculation_sex,
-          activityLevel: profile.activity_level,
-          goal: profile.goal,
-        })
-      : "Complete your profile to see a personalized workout plan.";
-
-  const todayDate = indiaTodayString();
+  const { entries, today, weekDates } = await getWorkout();
 
   return (
     <div className="grid gap-8">
@@ -42,29 +24,33 @@ export default async function WorkoutPage() {
           </NextLink>
         }
       />
-      <Card className="border-l-4 border-sky-400/60 bg-gradient-to-b from-zinc-950/50 to-zinc-950/20 p-4">
-        <div className="grid gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-sky-300">AI-generated plan</p>
-            <h2 className="mt-2 text-xl font-black">Suggested 3-day workout routine</h2>
-          </div>
-          <pre className="whitespace-pre-wrap text-sm leading-6 text-zinc-300">{workoutPlanSummary}</pre>
-        </div>
-      </Card>
       <div className="grid gap-4 xl:grid-cols-2">
         {days.map((day, index) => {
-          const dayEntries = entries.filter((entry) => entry.day_of_week === index + 1);
+          const dayOfWeek = index + 1;
+          const date = weekDates[index]!;
+          const isToday = dayOfWeek === today.dayOfWeek;
+          const isFuture = date > today.date;
+          const dayEntries = entries.filter((entry) => entry.day_of_week === dayOfWeek);
+          const doneCount = dayEntries.filter((entry) => entry.completed).length;
           return (
-            <Card key={day} className="p-0">
+            <Card
+              key={day}
+              className={`p-0 ${isToday ? "border-lime-300/40" : ""}`}
+              aria-current={isToday ? "date" : undefined}
+            >
               <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wider text-zinc-500">
-                    Day {index + 1}
+                  <p className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                    {isToday ? "Today" : `Day ${dayOfWeek}`}
                   </p>
                   <h2 className="mt-1 text-lg font-black">{day}</h2>
                 </div>
                 <Badge tone={dayEntries.length ? "lime" : "neutral"}>
-                  {dayEntries.length ? `${dayEntries.length} exercises` : "Recovery"}
+                  {dayEntries.length
+                    ? isFuture
+                      ? `${dayEntries.length} exercises`
+                      : `${doneCount} of ${dayEntries.length} done`
+                    : "Recovery"}
                 </Badge>
               </div>
               {dayEntries.length ? (
@@ -78,33 +64,42 @@ export default async function WorkoutPage() {
                         {entry.exercise.suggested_sets}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-bold">{entry.exercise.name}</p>
-                        <p className="text-xs text-zinc-500">
-                          {entry.exercise.suggested_reps} reps
+                        <p
+                          className={`truncate font-bold ${entry.completed ? "text-zinc-400 line-through" : ""}`}
+                        >
+                          {entry.exercise.name}
+                        </p>
+                        <p className="text-xs text-zinc-400">
+                          {entry.exercise.suggested_sets} sets · {entry.exercise.suggested_reps}{" "}
+                          reps
                         </p>
                       </div>
 
-                      <form action={setWorkoutCompletion} className="mr-2">
-                        <input type="hidden" name="entryId" value={entry.id} />
-                        <input type="hidden" name="completionDate" value={todayDate} />
-                        <input type="hidden" name="completed" value={entry.completed ? "false" : "true"} />
-                        <button
-                          aria-label={`Mark ${entry.exercise.name} as ${entry.completed ? "incomplete" : "complete"}`}
-                          className={"grid size-11 place-items-center rounded-xl " + (entry.completed ? "bg-lime-600 text-black" : "text-zinc-600 hover:bg-lime-300/10 hover:text-lime-300")}
-                        >
-                          <Check className="size-4" />
-                        </button>
-                      </form>
+                      {isFuture ? null : (
+                        <ActionForm action={setWorkoutCompletion}>
+                          <input type="hidden" name="entryId" value={entry.id} />
+                          <input type="hidden" name="completionDate" value={date} />
+                          <input
+                            type="hidden"
+                            name="completed"
+                            value={entry.completed ? "false" : "true"}
+                          />
+                          <PendingButton
+                            label={`Mark ${entry.exercise.name} on ${day} as ${entry.completed ? "not done" : "done"}`}
+                            className={`grid size-11 place-items-center rounded-xl border disabled:opacity-60 ${entry.completed ? "border-lime-300 bg-lime-300 text-zinc-950" : "border-zinc-500 text-zinc-400 hover:border-lime-300 hover:text-lime-300"}`}
+                            icon={<Check className="size-4" />}
+                          />
+                        </ActionForm>
+                      )}
 
-                      <form action={removeWorkoutEntry}>
+                      <ActionForm action={removeWorkoutEntry}>
                         <input type="hidden" name="entryId" value={entry.id} />
-                        <button
-                          aria-label={`Remove ${entry.exercise.name}`}
-                          className="grid size-11 place-items-center rounded-xl text-zinc-600 hover:bg-red-400/10 hover:text-red-300"
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </form>
+                        <PendingButton
+                          label={`Remove ${entry.exercise.name} from ${day}`}
+                          className="grid size-11 place-items-center rounded-xl text-zinc-400 hover:bg-red-400/10 hover:text-red-300 disabled:opacity-60"
+                          icon={<Trash2 className="size-4" />}
+                        />
+                      </ActionForm>
                     </div>
                   ))}
                 </div>

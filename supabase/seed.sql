@@ -78,6 +78,22 @@ insert into public.recipes (id,name,slug,servings,prep_time_minutes,difficulty,c
 ('d0000000-0000-4000-8000-000000000012','Greek Yogurt Protein Parfait','greek-yogurt-protein-parfait',1,10,'BEGINNER',410,34,45,11,'/images/recipes/recomp.svg','Layered yogurt, fruit, oats, and seeds for a fast recovery meal.')
 on conflict do nothing;
 
+update public.recipes set diet_type = case slug
+  when 'paneer-power-bowl' then 'VEGETARIAN'
+  when 'chicken-oats-khichdi' then 'NON_VEGETARIAN'
+  when 'banana-peanut-lassi' then 'VEGETARIAN'
+  when 'tandoori-chicken-salad' then 'NON_VEGETARIAN'
+  when 'moong-dal-chilla' then 'VEGAN'
+  when 'tofu-vegetable-stir-fry' then 'VEGAN'
+  when 'rajma-rice-balance-bowl' then 'VEGETARIAN'
+  when 'egg-bhurji-roti-wrap' then 'EGGETARIAN'
+  when 'curd-millet-bowl' then 'VEGETARIAN'
+  when 'fish-tikka-quinoa' then 'NON_VEGETARIAN'
+  when 'soya-keema-lettuce-cups' then 'VEGAN'
+  when 'greek-yogurt-protein-parfait' then 'VEGETARIAN'
+  else diet_type
+end::public.diet_preference;
+
 insert into public.recipe_goals (recipe_id,goal) values
 ('d0000000-0000-4000-8000-000000000001','MUSCLE_GAIN'),('d0000000-0000-4000-8000-000000000002','MUSCLE_GAIN'),('d0000000-0000-4000-8000-000000000003','MUSCLE_GAIN'),
 ('d0000000-0000-4000-8000-000000000004','FAT_LOSS'),('d0000000-0000-4000-8000-000000000005','FAT_LOSS'),('d0000000-0000-4000-8000-000000000006','FAT_LOSS'),

@@ -1,4 +1,4 @@
-project_id = "fitforge"
+project_id = "forgefit"
 
 [api]
 enabled = true

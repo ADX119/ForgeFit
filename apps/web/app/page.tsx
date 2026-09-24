@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Check, Dumbbell, Salad, ShoppingBasket, Sparkles } from "lucide-react";
-import { Badge, Card } from "@fitforge/ui";
+import { Badge, Card } from "@forgefit/ui";
 import { Brand } from "@/components/brand";
 
 const pillars = [
@@ -69,7 +69,7 @@ export default function LandingPage() {
               Explore features
             </Link>
           </div>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-zinc-500">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-zinc-400">
             {["21 guided exercises", "12 goal-based recipes", "No real purchases"].map((item) => (
               <span key={item} className="flex items-center gap-2">
                 <Check className="size-4 text-lime-300" />
@@ -100,13 +100,13 @@ export default function LandingPage() {
                     className="flex items-center gap-4 rounded-xl border border-white/7 bg-zinc-900 p-4"
                   >
                     <span
-                      className={`grid size-9 place-items-center rounded-lg text-sm font-black ${index < 2 ? "bg-lime-300 text-zinc-950" : "bg-zinc-800 text-zinc-500"}`}
+                      className={`grid size-9 place-items-center rounded-lg text-sm font-black ${index < 2 ? "bg-lime-300 text-zinc-950" : "bg-zinc-800 text-zinc-400"}`}
                     >
                       {index < 2 ? <Check className="size-4" /> : "3"}
                     </span>
                     <div className="flex-1">
                       <p className="font-bold">{exercise}</p>
-                      <p className="mt-1 text-xs text-zinc-500">3 sets · 8–12 reps</p>
+                      <p className="mt-1 text-xs text-zinc-400">3 sets · 8–12 reps</p>
                     </div>
                   </div>
                 ),
@@ -114,15 +114,15 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-3 gap-px bg-white/8">
               <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-500">Calories</p>
+                <p className="text-xs text-zinc-400">Calories</p>
                 <p className="mt-1 text-xl font-black">2,420</p>
               </div>
               <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-500">Protein</p>
+                <p className="text-xs text-zinc-400">Protein</p>
                 <p className="mt-1 text-xl font-black">140g</p>
               </div>
               <div className="bg-zinc-900 p-4">
-                <p className="text-xs text-zinc-500">Groceries</p>
+                <p className="text-xs text-zinc-400">Groceries</p>
                 <p className="mt-1 text-xl font-black">8</p>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <footer className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <footer className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-zinc-400 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <Brand />
         <p>Demo commerce only · Fitness estimates are not medical advice.</p>
       </footer>

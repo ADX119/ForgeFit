@@ -1,4 +1,4 @@
-import { PageHeader } from "@fitforge/ui";
+import { PageHeader } from "@forgefit/ui";
 import { ExerciseCatalog } from "@/components/features/exercise-catalog";
 import { getExercises } from "@/lib/data/queries";
 

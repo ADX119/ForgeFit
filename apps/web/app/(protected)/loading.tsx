@@ -1,4 +1,4 @@
-import { Skeleton } from "@fitforge/ui";
+import { Skeleton } from "@forgefit/ui";
 
 export default function Loading() {
   return (

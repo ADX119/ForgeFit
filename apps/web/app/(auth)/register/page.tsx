@@ -7,7 +7,7 @@ export default function RegisterPage() {
   return (
     <AuthShell
       eyebrow="Start stronger"
-      title="Create your FitForge account"
+      title="Create your ForgeFit account"
       description="Build a plan around your body, schedule, and goal."
     >
       <AuthForm mode="register" action={register} />
