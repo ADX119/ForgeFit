@@ -136,6 +136,61 @@ Ingredient, dish, and equipment offers are deterministic simulations. Every surf
 
 Future real integrations should replace the `ShoppingProvider` or `FoodDeliveryProvider` implementations without changing UI/domain contracts.
 
+## Running on the Supabase free plan
+
+ForgeFit is designed to run on free tiers until it has a few hundred regular users. The free plan has four catches, handled as follows.
+
+**Project pausing.** Free projects with too little database activity for 7 days are paused (a warning email arrives first). Restore it from the Supabase dashboard; it takes a few minutes and keeps all data. For day-to-day development, prefer a local database (`supabase start`, which needs Docker Desktop) so the cloud project is only used by the deployed app.
+
+**Database size.** Above 500 MB the database becomes read-only and workouts can't be saved. The weekly backup workflow also reports the size and fails, which triggers a GitHub email, once it passes 350 MB. That is the signal to move to Supabase Pro.
+
+**Email.** Supabase's built-in email only delivers to members of the project's team, at 2 messages an hour, so real users never receive confirmation or password-reset emails. ForgeFit sends through [Resend](https://resend.com) instead (free plan: 3,000 emails a month, 100 a day). Resend requires a domain you own.
+
+1. **Resend:** create an account, add your domain under Domains, and add the DNS records it shows at your domain registrar. Wait until the domain shows as verified. Then create an API key with "Sending access".
+2. **Supabase → Authentication → Emails → SMTP Settings:** enable custom SMTP and enter:
+
+   | Field        | Value                    |
+   | ------------ | ------------------------ |
+   | Sender email | `no-reply@<your-domain>` |
+   | Sender name  | `ForgeFit`               |
+   | Host         | `smtp.resend.com`        |
+   | Port         | `465`                    |
+   | Username     | `resend`                 |
+   | Password     | your Resend API key      |
+
+3. **Supabase → Authentication → Emails → Templates:** paste `supabase/templates/confirmation.html` into "Confirm signup" (subject: _Confirm your ForgeFit email_) and `supabase/templates/recovery.html` into "Reset password" (subject: _Reset your ForgeFit password_). Both link to `/auth/confirm`, which signs the person in from the link.
+4. **Supabase → Authentication → URL Configuration:** set Site URL to the app's address (`http://localhost:3000` until it is deployed) and add `http://localhost:3000/**` plus the production URL with `/**` to Redirect URLs.
+5. **Supabase → Authentication → Sign In / Providers → Email:** keep "Confirm email" on.
+
+#### Testing email without a domain (Ethereal)
+
+For development, point Supabase's SMTP at [Ethereal](https://ethereal.email), a free fake mail server. Nothing is delivered: every confirmation and reset email, for any address, lands in one web inbox. No domain or sign-up needed, so you can test sign-up and password reset as often as you like.
+
+1. Create an inbox at [ethereal.email](https://ethereal.email) ("Create Ethereal Account") and keep the username and password.
+2. Supabase → Authentication → Emails → SMTP Settings: sender email = the Ethereal username, sender name `ForgeFit`, host `smtp.ethereal.email`, port `587`, username and password from step 1.
+3. Supabase → Authentication → Rate Limits: raise "emails sent per hour" (for example to 100) so repeated tests aren't blocked.
+4. Do steps 3–5 of the Resend setup above (templates, URL configuration, "Confirm email" on).
+5. Test: sign up in the app with any new address on the `ethereal.email` domain (`lifter1@ethereal.email`, `lifter2@ethereal.email`, …). Open [ethereal.email/messages](https://ethereal.email/messages) (log in with the Ethereal credentials) and click the link in the email.
+
+Supabase allows one sign-up or reset email per address per 60 seconds, so use a fresh address each time. Ethereal keeps messages for about 15 days. Switch the SMTP settings to Resend before real people use the app.
+
+### Database backups
+
+The free plan has no automatic backups. `.github/workflows/database-backup.yml` runs every Monday at 02:00 IST (and on demand from the Actions tab). It dumps roles, schema and data, encrypts them, and keeps each backup as a workflow artifact for 30 days.
+
+Add two repository secrets under Settings → Secrets and variables → Actions:
+
+- `SUPABASE_DB_URL`: the **Session pooler** connection string from Supabase → Connect. The direct `db.<ref>.supabase.co` host is IPv6-only and GitHub runners can't reach it.
+- `BACKUP_PASSPHRASE`: a long random passphrase. Keep a copy in your password manager; without it the backups can't be opened. Encryption matters because this repository is public, so its workflow artifacts can be downloaded by other GitHub users.
+
+To restore, download the artifact, then:
+
+```bash
+gpg --decrypt forgefit-db.tar.gz.gpg | tar xz
+psql "$TARGET_DB_URL" --single-transaction -f roles.sql -f schema.sql \
+  -c "SET session_replication_role = replica" -f data.sql
+```
+
 ## PWA and deployment
 
 The production build provides a web manifest, maskable icons, install guidance, security headers, a minimal offline fallback, and responsive navigation at phone, tablet, and desktop widths. Serve the deployed application over HTTPS for installation. Configure the production URL in both `NEXT_PUBLIC_SITE_URL` and Supabase Auth redirect settings.

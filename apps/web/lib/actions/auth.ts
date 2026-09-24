@@ -11,6 +11,9 @@ const errorState = (message: string): ActionState => ({ status: "error", message
 const authMessages: Record<string, string> = {
   invalid_credentials: "Email or password is incorrect.",
   email_not_confirmed: "Confirm your email first. Check your inbox for the link.",
+  email_address_invalid:
+    "That email address can't be used. Check it for typos, or try another address.",
+  email_address_not_authorized: "We can't send email to that address yet. Try again later.",
   user_already_exists: "An account with this email already exists. Sign in instead.",
   email_exists: "An account with this email already exists. Sign in instead.",
   weak_password: "Choose a stronger password: at least 8 characters, not a common one.",
@@ -73,7 +76,8 @@ export async function requestPasswordReset(
   const supabase = await createClient();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${siteUrl}/update-password`,
+    // Lands on /auth/confirm, which signs the user in from the link before showing the form.
+    redirectTo: `${siteUrl}/auth/confirm?next=/update-password`,
   });
   if (error) return authError(error);
   return { status: "success", message: "If that account exists, a reset link is on its way." };

@@ -24,3 +24,13 @@ enable_signup = true
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
+
+# Email templates (local). The hosted project uses the same files, pasted into
+# Authentication -> Emails -> Templates; see "Email" in README.md.
+[auth.email.template.confirmation]
+subject = "Confirm your ForgeFit email"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your ForgeFit password"
+content_path = "./supabase/templates/recovery.html"

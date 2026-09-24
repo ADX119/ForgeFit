@@ -1,0 +1,77 @@
+# Weekly Supabase backup and size check for the free plan, which has no automatic backups
+# and turns the database read-only above 500 MB.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   SUPABASE_DB_URL    Session pooler connection string (Supabase -> Connect -> Session pooler).
+#                      The direct db.<ref>.supabase.co host is IPv6-only and unreachable from GitHub runners.
+#   BACKUP_PASSPHRASE  Long random passphrase. Backups are encrypted with it because this repository is
+#                      public and workflow artifacts are downloadable by other GitHub users.
+#
+# Restore: see "Database backups" in README.md.
+
+name: Database backup
+
+on:
+  schedule:
+    - cron: "30 20 * * 0" # Sundays 20:30 UTC = Mondays 02:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+      # Warn well before the free plan's 500 MB read-only limit.
+      SIZE_LIMIT_MB: 350
+    steps:
+      - name: Check secrets
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
+            echo "::error::Set the SUPABASE_DB_URL and BACKUP_PASSPHRASE repository secrets."
+            exit 1
+          fi
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump roles, schema and data
+        run: |
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f data.sql --use-copy --data-only
+
+      - name: Encrypt
+        run: |
+          tar czf - roles.sql schema.sql data.sql \
+            | gpg --batch --yes --pinentry-mode loopback --passphrase "$BACKUP_PASSPHRASE" \
+                  --symmetric --cipher-algo AES256 -o forgefit-db.tar.gz.gpg
+          rm roles.sql schema.sql data.sql
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: forgefit-db-${{ github.run_number }}
+          path: forgefit-db.tar.gz.gpg
+          retention-days: 30
+          if-no-files-found: error
+
+      # Runs after the upload so a large database is still backed up; failing here makes GitHub email you.
+      - name: Check database size
+        run: |
+          bytes=$(psql "$SUPABASE_DB_URL" -tAc "select pg_database_size(current_database())")
+          mb=$((bytes / 1024 / 1024))
+          echo "Database size: ${mb} MB (warning threshold ${SIZE_LIMIT_MB} MB, free plan limit 500 MB)"
+          echo "Database size: **${mb} MB** of 500 MB on the free plan" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$mb" -ge "$SIZE_LIMIT_MB" ]; then
+            echo "::error::Database is ${mb} MB. Plan the upgrade to Supabase Pro before it reaches 500 MB and turns read-only."
+            exit 1
+          fi

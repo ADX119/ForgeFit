@@ -51,35 +51,38 @@ a {
   color: white;
 }
 
-.input {
-  min-height: 46px;
-  width: 100%;
-  border: 1px solid #71717a;
-  border-radius: 0.75rem;
-  background: rgba(24, 24, 27, 0.8);
-  padding: 0.7rem 0.85rem;
-  color: white;
-  outline: none;
-  transition:
-    border-color 150ms,
-    box-shadow 150ms;
-}
-.input:focus {
-  border-color: #bef264;
-  box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.13);
-}
-.input::placeholder {
-  color: #a1a1aa;
-}
-.label {
-  display: grid;
-  gap: 0.45rem;
-  color: #d4d4d8;
-  font-size: 0.875rem;
-  font-weight: 650;
-}
-.grid-auto {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+/* In the components layer so Tailwind utilities (e.g. pl-10 beside a search icon) can override them. */
+@layer components {
+  .input {
+    min-height: 46px;
+    width: 100%;
+    border: 1px solid #71717a;
+    border-radius: 0.75rem;
+    background: rgba(24, 24, 27, 0.8);
+    padding: 0.7rem 0.85rem;
+    color: white;
+    outline: none;
+    transition:
+      border-color 150ms,
+      box-shadow 150ms;
+  }
+  .input:focus {
+    border-color: #bef264;
+    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.13);
+  }
+  .input::placeholder {
+    color: #a1a1aa;
+  }
+  .label {
+    display: grid;
+    gap: 0.45rem;
+    color: #d4d4d8;
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+  .grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
