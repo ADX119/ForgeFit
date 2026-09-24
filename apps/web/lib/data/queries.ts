@@ -4,9 +4,7 @@ import { calculateMacroTarget, zonedDay, zonedWeekDates, type DietGoal } from "@
 import type {
   EquipmentRow,
   ExerciseRow,
-  PurchasableEquipmentRow,
   GroceryItemRow,
-  MockOrderRow,
   ProfileRow,
   RecipeRow,
 } from "@forgefit/supabase";
@@ -211,15 +209,17 @@ export async function getGroceries(): Promise<GroceryItemRow[]> {
   return data as GroceryItemRow[];
 }
 
-export async function getEquipment() {
+/** Equipment page: what can be bought, what the user owns, and what their plan uses. */
+export async function getEquipmentOverview() {
   const supabase = await createClient();
   const profile = await getCurrentProfile();
-  const [{ data: items, error }, { data: plan }] = await Promise.all([
+  const [{ data: items, error }, { data: owned }, { data: plan }] = await Promise.all([
     supabase.from("equipment").select("*").eq("purchasable", true).order("name"),
+    supabase.from("user_equipment").select("equipment_id").eq("user_id", profile.id),
     supabase.from("workout_plans").select("id").eq("user_id", profile.id).single(),
   ]);
   if (error) throw new Error(error.message);
-  let relevant = new Set<string>();
+  let usedByPlan = new Set<string>();
   if (plan) {
     const { data: entries } = await supabase
       .from("workout_entries")
@@ -228,27 +228,16 @@ export async function getEquipment() {
     const typedEntries = (entries ?? []) as unknown as {
       exercises: { exercise_equipment: { equipment_id: string }[] } | null;
     }[];
-    relevant = new Set(
+    usedByPlan = new Set(
       typedEntries.flatMap(
         (entry) => entry.exercises?.exercise_equipment.map((item) => item.equipment_id) ?? [],
       ),
     );
   }
-  return { items: items as PurchasableEquipmentRow[], relevant };
-}
-
-export async function getOrders(): Promise<MockOrderRow[]> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return [];
-  const { data, error } = await supabase
-    .from("mock_orders")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(10);
-  if (error) throw new Error(error.message);
-  return data as MockOrderRow[];
+  return {
+    items: (items ?? []) as EquipmentRow[],
+    owned: new Set((owned ?? []).map((row) => row.equipment_id as string)),
+    usedByPlan,
+    location: profile.training_location,
+  };
 }

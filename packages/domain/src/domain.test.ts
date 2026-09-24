@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   calculateMacroTarget,
-  MockFoodDeliveryProvider,
-  MockShoppingProvider,
   normalizeIngredientName,
   normalizeUnit,
+  providerName,
+  providerSearchUrl,
+  GROCERY_PROVIDER_IDS,
   recipeMatchesDiet,
   scaleQuantity,
   zonedDay,
@@ -94,14 +95,27 @@ describe("grocery helpers", () => {
   });
 });
 
-describe("mock commerce", () => {
-  it("is deterministic and always discloses demo status", async () => {
-    const provider = new MockShoppingProvider();
-    const first = await provider.getOffers("INGREDIENT", "paneer", "Paneer");
-    expect(first).toEqual(await provider.getOffers("INGREDIENT", "paneer", "Paneer"));
-    expect(provider.placeDemoOrder(first[0]!)).toMatchObject({ demo: true, status: "DEMO_PLACED" });
-    expect(await new MockFoodDeliveryProvider().getOffers("recipe-1", "Power Bowl")).toHaveLength(
-      2,
+describe("shopping links", () => {
+  it("builds each retailer's own search URL with the query encoded", () => {
+    expect(providerSearchUrl("bigbasket", "paneer")).toBe("https://www.bigbasket.com/ps/?q=paneer");
+    expect(providerSearchUrl("jiomart", "brown rice")).toBe(
+      "https://www.jiomart.com/search/brown%20rice",
     );
+    expect(providerSearchUrl("amazon", " adjustable dumbbells ")).toBe(
+      "https://www.amazon.in/s?k=adjustable%20dumbbells",
+    );
+    expect(providerSearchUrl("swiggy", "egg & roti")).toBe(
+      "https://www.swiggy.com/search?query=egg%20%26%20roti",
+    );
+  });
+
+  it("names every grocery provider", () => {
+    expect(GROCERY_PROVIDER_IDS.map(providerName)).toEqual([
+      "BigBasket",
+      "Blinkit",
+      "Zepto",
+      "Swiggy Instamart",
+      "JioMart",
+    ]);
   });
 });

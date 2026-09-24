@@ -53,9 +53,6 @@ export const RECORD_TYPES = [
 ] as const;
 export type RecordType = (typeof RECORD_TYPES)[number];
 
-export const ORDER_TYPES = ["INGREDIENT", "DISH", "EQUIPMENT"] as const;
-export type OrderType = (typeof ORDER_TYPES)[number];
-
 export interface ProfileMetrics {
   weightKg: number;
   heightCm: number;
@@ -72,33 +69,4 @@ export interface MacroTarget {
   carbsG: number;
   fatG: number;
   disclaimer: string;
-}
-
-export interface CommerceOffer {
-  id: string;
-  provider: string;
-  label: string;
-  priceInr: number;
-  etaMinutes: number;
-  demo: boolean;
-  externalUrl?: string;
-}
-
-export interface DemoOrderResult extends CommerceOffer {
-  status: "DEMO_PLACED";
-  message: string;
-}
-
-export interface ShoppingProvider {
-  getOffers(
-    type: "INGREDIENT" | "EQUIPMENT",
-    sourceId: string,
-    label: string,
-  ): Promise<CommerceOffer[]>;
-  placeDemoOrder(offer: CommerceOffer): DemoOrderResult;
-}
-
-export interface FoodDeliveryProvider {
-  getOffers(recipeId: string, recipeName: string): Promise<CommerceOffer[]>;
-  placeDemoOrder(offer: CommerceOffer): DemoOrderResult;
 }

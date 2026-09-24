@@ -1,6 +1,6 @@
 # ForgeFit
 
-ForgeFit is an installable fitness, nutrition, grocery, and equipment PWA. It combines a guided exercise catalog, a weekly workout planner, goal-based macro estimates, recipes filtered by diet preference (vegan, vegetarian, eggetarian, non-vegetarian), a consolidated grocery list, and clearly disclosed mock shopping flows.
+ForgeFit is an installable fitness, nutrition, grocery, and equipment PWA. It combines a guided exercise catalog, a weekly workout planner, goal-based macro estimates, recipes filtered by diet preference (vegan, vegetarian, eggetarian, non-vegetarian), a consolidated grocery list, and links to real retailers for groceries, dishes, and equipment.
 
 ## Stack
 
@@ -18,7 +18,7 @@ packages/ui           Shared accessible UI primitives
 packages/supabase     Database-facing types and client utilities
 packages/config       Shared TypeScript configuration
 supabase/migrations   Schema, triggers, RPC, and RLS policies
-supabase/seed.sql     21 exercises, 12 recipes, and 8 equipment products
+supabase/seed.sql     12 recipes (the 63-exercise library lives in a migration)
 supabase/tests        pgTAP database tests
 ```
 
@@ -78,17 +78,7 @@ This repository never needs a Supabase service-role key in the web application.
 
    Keep email confirmation disabled for a local demo or configure the project’s confirmation template to redirect to `/auth/confirm`. Enable confirmation for a deployed environment.
 
-5. Optional commerce integration
-
-   No API keys are required. Grocery, equipment, and dish offers open free provider search links.
-
-   ```bash
-   GROCERY_API_KEY=your-grocery-api-key
-   FOOD_DELIVERY_API_KEY=your-food-delivery-api-key
-   EQUIPMENT_API_KEY=your-equipment-api-key
-   ```
-
-6. Start the application:
+5. Start the application:
 
    ```bash
    pnpm dev
@@ -118,10 +108,9 @@ FORGEFIT_E2E_EMAIL=test@example.com FORGEFIT_E2E_PASSWORD='your-password' pnpm t
 ## Security and data model
 
 - Supabase SSR uses PKCE and cookie-backed sessions. `proxy.ts` refreshes expired sessions.
-- Every exposed table has RLS enabled. Catalog rows are readable by authenticated users; profile, workout, grocery, completion, and demo-order rows are restricted to `auth.uid()`.
+- Every exposed table has RLS enabled. Catalog rows are readable by authenticated users; profile, workout, grocery, completion, and owned-equipment rows are restricted to `auth.uid()`.
 - The browser only receives the publishable key. User identity is revalidated in every Server Action.
 - Grocery insertion is an authenticated PostgreSQL RPC using an atomic `ON CONFLICT` quantity increment.
-- Commerce offers are regenerated and checked server-side before a demo order is saved, preventing client-side price tampering.
 - The service worker caches only icons and the offline page. It never caches authenticated HTML or Supabase data.
 
 ## Nutrition formula
@@ -130,11 +119,15 @@ ForgeFit uses Mifflin–St Jeor BMR, standard activity multipliers, and goal adj
 
 These values are educational estimates, not medical advice. The MVP is limited to adults aged 18 or older.
 
-## Demo commerce
+## Shopping links
 
-Ingredient, dish, and equipment offers are deterministic simulations. Every surface displays a Demo badge and no-charge language. Placing an offer writes a `DEMO_PLACED` record so the flow can be verified from Profile, but no payment data, retailer redirect, or third-party commerce call exists.
+ForgeFit doesn't sell anything, show prices, or take orders. Where a plan leads to a purchase, it links to the retailer's own search page and the retailer handles the rest:
 
-Future real integrations should replace the `ShoppingProvider` or `FoodDeliveryProvider` implementations without changing UI/domain contracts.
+- **Groceries** (Nutrition → Grocery): each item links to a search on BigBasket, Blinkit, Zepto, Swiggy Instamart, or JioMart. The chosen store is saved on the profile.
+- **Dishes** (recipe pages): "Order this dish" searches Swiggy or Zomato.
+- **Equipment** (Train → Equipment): items you don't own link to Amazon, Flipkart, and Decathlon. Marking what you own lets plans use it.
+
+Retailers are listed in `packages/domain/src/commerce.ts`; adding one is a name and a search-URL builder. No API keys are needed.
 
 ## Running on the Supabase free plan
 

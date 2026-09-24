@@ -1,5 +1,5 @@
 begin;
-select plan(20);
+select plan(22);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'workout_entries', 'workout entries table exists');
@@ -49,10 +49,16 @@ select is_empty(
   'generic placeholder steps are gone'
 );
 select results_eq(
-  $$select count(*)::bigint from public.equipment where not purchasable and mock_price_inr is null$$,
+  $$select count(*)::bigint from public.equipment where not purchasable$$,
   array[4::bigint],
   'gym machines are catalogued but not for sale'
 );
+
+select ok(
+  (select rowsecurity from pg_tables where schemaname = 'public' and tablename = 'user_equipment'),
+  'owned equipment exists with row level security'
+);
+select hasnt_table('public', 'mock_orders', 'simulated orders are gone');
 
 select * from finish();
 rollback;

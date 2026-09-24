@@ -7,7 +7,7 @@ const pillars = [
   {
     icon: Dumbbell,
     title: "Train with intent",
-    body: "Build a balanced weekly plan from 21 guided exercises, filtered by muscle, equipment, and level.",
+    body: "Build a balanced weekly plan from 63 guided exercises, filtered by muscle, equipment, and level.",
   },
   {
     icon: Salad,
@@ -70,7 +70,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-muted">
-            {["21 guided exercises", "12 goal-based recipes", "No real purchases"].map((item) => (
+            {["63 guided exercises", "12 goal-based recipes", "Veg and non-veg"].map((item) => (
               <span key={item} className="flex items-center gap-2">
                 <Check className="size-4 text-primary" />
                 {item}
@@ -150,7 +150,7 @@ export default function LandingPage() {
       </section>
       <footer className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <Brand />
-        <p>Demo commerce only · Fitness estimates are not medical advice.</p>
+        <p>Fitness and nutrition estimates are not medical advice.</p>
       </footer>
     </main>
   );

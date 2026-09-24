@@ -2,31 +2,19 @@
 
 import {
   completionSchema,
-  demoOrderSchema,
   groceryRecipeSchema,
-  MockFoodDeliveryProvider,
-  MockShoppingProvider,
   workoutEntrySchema,
   zonedDay,
 } from "@forgefit/domain";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { fail, ok, type ActionState, type MutationResult } from "./state";
+import { fail, ok, type MutationResult } from "./state";
 
 const SIGNED_OUT = "You've been signed out. Sign in again to continue.";
 const TRY_AGAIN = "That didn't save. Check your connection and try again.";
 
 const idSchema = z.uuid();
-
-async function currentUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Authentication required");
-  return { supabase, user };
-}
 
 async function userOrNull() {
   const supabase = await createClient();
@@ -73,7 +61,7 @@ export async function addWorkoutEntry(formData: FormData): Promise<MutationResul
   if (error) return fail(TRY_AGAIN);
   revalidatePath("/train");
   revalidatePath("/today");
-  revalidatePath("/shop");
+  revalidatePath("/train/equipment");
   const dayName = DAY_NAMES[parsed.data.dayOfWeek - 1];
   // ignoreDuplicates returns no row when the exercise was already on that day.
   return data?.length ? ok(`Added to ${dayName}.`) : ok(`Already on ${dayName}.`);
@@ -88,7 +76,7 @@ export async function removeWorkoutEntry(formData: FormData): Promise<MutationRe
   if (error) return fail(TRY_AGAIN);
   revalidatePath("/train");
   revalidatePath("/today");
-  revalidatePath("/shop");
+  revalidatePath("/train/equipment");
   return ok("Removed from your plan.");
 }
 
@@ -190,55 +178,4 @@ export async function clearCheckedGroceries(): Promise<MutationResult> {
   if (error) return fail(TRY_AGAIN);
   revalidatePath("/nutrition/grocery");
   return ok("Checked items cleared.");
-}
-
-export async function placeDemoOrder(input: unknown): Promise<
-  ActionState & {
-    order?: { provider: string; priceInr: number; etaMinutes: number; status: string };
-  }
-> {
-  const parsed = demoOrderSchema.safeParse(input);
-  if (!parsed.success) return { status: "error", message: "That demo offer is no longer valid." };
-  const foodProvider = parsed.data.type === "DISH" ? new MockFoodDeliveryProvider() : null;
-  const shoppingProvider = parsed.data.type !== "DISH" ? new MockShoppingProvider() : null;
-  const offers = foodProvider
-    ? await foodProvider.getOffers(parsed.data.sourceId, parsed.data.sourceName)
-    : await shoppingProvider!.getOffers(
-        parsed.data.type as "INGREDIENT" | "EQUIPMENT",
-        parsed.data.sourceId,
-        parsed.data.sourceName,
-      );
-  const selected = offers.find((item) => item.id === parsed.data.offerId);
-  if (
-    !selected ||
-    selected.provider !== parsed.data.provider ||
-    selected.priceInr !== parsed.data.priceInr
-  )
-    return { status: "error", message: "That demo offer is no longer valid." };
-  const result = foodProvider
-    ? foodProvider.placeDemoOrder(selected)
-    : shoppingProvider!.placeDemoOrder(selected);
-  const { supabase, user } = await currentUser();
-  const { error } = await supabase.from("mock_orders").insert({
-    user_id: user.id,
-    order_type: parsed.data.type,
-    source_id: parsed.data.sourceId,
-    source_name: parsed.data.sourceName,
-    provider: result.provider,
-    mock_price_inr: result.priceInr,
-    mock_eta_minutes: result.etaMinutes,
-    status: result.status,
-  });
-  if (error) return { status: "error", message: error.message };
-  revalidatePath("/profile");
-  return {
-    status: "success",
-    message: result.message,
-    order: {
-      provider: result.provider,
-      priceInr: result.priceInr,
-      etaMinutes: result.etaMinutes,
-      status: result.status,
-    },
-  };
 }

@@ -47,7 +47,6 @@ const exercises: ExerciseView[] = [
         slug: "pull-up-bar",
         description: "Bar",
         image_path: "/bar.svg",
-        mock_price_inr: 1299,
         purchasable: true,
       },
     ],

@@ -9,6 +9,7 @@ export default function TrainLayout({ children }: { children: ReactNode }) {
         tabs={[
           { href: "/train", label: "Plan" },
           { href: "/train/exercises", label: "Exercises" },
+          { href: "/train/equipment", label: "Equipment" },
         ]}
       />
       {children}

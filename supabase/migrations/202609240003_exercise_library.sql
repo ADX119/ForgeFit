@@ -1,7 +1,7 @@
 -- Phase 1: the ForgeFit exercise library (63 exercises).
 -- This migration owns the exercise catalogue: muscle groups, equipment, exercises, steps, form cues,
--- equipment links and secondary muscles. It is safe to re-run and makes a fresh database and an
--- existing one identical. seed.sql no longer inserts exercise data.
+-- equipment links and secondary muscles, and makes a fresh database and an existing one identical.
+-- seed.sql no longer inserts exercise data. (202609240004 later drops the price column used here.)
 
 -- Gym machines are part of the catalogue for filtering and plans, but aren't sold in the Shop.
 alter table public.equipment add column if not exists purchasable boolean not null default true;

@@ -3,9 +3,10 @@ import type {
   CalculationSex,
   DietGoal,
   DietPreference,
+  FoodProviderId,
+  GroceryProviderId,
   Difficulty,
   ExperienceLevel,
-  OrderType,
   RecordType,
   SessionStatus,
   SetType,
@@ -34,6 +35,8 @@ export interface ProfileRow {
   default_rest_seconds: number;
   weight_increment_kg: number;
   nutrition_enabled: boolean;
+  preferred_grocery_provider: GroceryProviderId | null;
+  preferred_food_provider: FoodProviderId | null;
   onboarding_completed: boolean;
   created_at: string;
   updated_at: string;
@@ -87,13 +90,15 @@ export interface EquipmentRow {
   slug: string;
   description: string;
   image_path: string;
-  /** Null for gym machines, which aren't sold in the Shop. */
-  mock_price_inr: number | null;
+  /** False for gym machines: available at a full gym, not something people buy. */
   purchasable: boolean;
 }
 
-/** Equipment that can be bought in the Shop always has a price. */
-export type PurchasableEquipmentRow = EquipmentRow & { mock_price_inr: number; purchasable: true };
+export interface UserEquipmentRow {
+  user_id: Id;
+  equipment_id: Id;
+  created_at: string;
+}
 
 export interface WorkoutEntryRow {
   id: Id;
@@ -115,19 +120,6 @@ export interface GroceryItemRow {
   source_recipe_id: Id | null;
   created_at: string;
   updated_at: string;
-}
-
-export interface MockOrderRow {
-  id: Id;
-  user_id: Id;
-  order_type: OrderType;
-  source_id: string;
-  source_name: string;
-  provider: string;
-  mock_price_inr: number;
-  mock_eta_minutes: number;
-  status: "DEMO_PLACED";
-  created_at: string;
 }
 
 export interface PlanTemplateRow {

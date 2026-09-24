@@ -5,7 +5,7 @@ import { Badge, Card } from "@forgefit/ui";
 import { DIET_PREFERENCE_LABELS, recipeMatchesDiet } from "@forgefit/domain";
 import { ActionForm, PendingButton } from "@/components/action-form";
 import { DietMark } from "@/components/features/diet-mark";
-import { DemoOffers } from "@/components/features/demo-offers";
+import { OrderDishMenu } from "@/components/features/order-dish-menu";
 import { addRecipeToGrocery } from "@/lib/actions/features";
 import { getCurrentProfile, getRecipe } from "@/lib/data/queries";
 
@@ -56,12 +56,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             <span>{recipe.servings} servings</span>
           </div>
         </div>
-        <DemoOffers
-          type="DISH"
-          sourceId={recipe.id}
-          sourceName={recipe.name}
-          label="Order this dish · Demo"
-        />
+        <OrderDishMenu dish={recipe.name} />
       </header>
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
@@ -100,13 +95,6 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                       {ingredient.quantity} {ingredient.unit}
                     </p>
                   </div>
-                  <DemoOffers
-                    type="INGREDIENT"
-                    sourceId={ingredient.id}
-                    sourceName={ingredient.name}
-                    label="Shop · Demo"
-                    compact
-                  />
                 </div>
                 {ingredient.alternatives.length ? (
                   <p className="mt-2 text-xs text-muted">

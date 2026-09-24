@@ -1,18 +1,18 @@
 import { LogOut } from "lucide-react";
-import { Badge, Button, Card, PageHeader } from "@forgefit/ui";
+import { Button, Card, PageHeader } from "@forgefit/ui";
 import { InstallHelp } from "@/components/features/install-help";
 import { ProfileForm } from "@/components/features/profile-form";
 import { signOut } from "@/lib/actions/auth";
-import { getCurrentProfile, getOrders } from "@/lib/data/queries";
+import { getCurrentProfile } from "@/lib/data/queries";
 
 export default async function ProfilePage() {
-  const [profile, orders] = await Promise.all([getCurrentProfile(), getOrders()]);
+  const profile = await getCurrentProfile();
   return (
     <div className="grid gap-8">
       <PageHeader
         eyebrow="Profile & settings"
         title="Your ForgeFit baseline"
-        description="Update the inputs behind your nutrition estimate and review recent simulated orders."
+        description="The details behind your nutrition estimate and recipe choices."
       />
       <div className="grid gap-5 xl:grid-cols-[1fr_0.8fr]">
         <Card>
@@ -27,38 +27,6 @@ export default async function ProfilePage() {
               Add ForgeFit to your home screen for faster access and a standalone window.
             </p>
             <InstallHelp />
-          </Card>
-          <Card>
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Recent demo orders</h2>
-              <Badge tone="orange">Demo only</Badge>
-            </div>
-            {orders.length ? (
-              <div className="mt-5 divide-y divide-line">
-                {orders.map((order) => (
-                  <div key={order.id} className="py-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-bold">{order.source_name}</p>
-                        <p className="mt-1 text-xs text-muted">
-                          {order.provider} · {order.order_type.toLowerCase()}
-                        </p>
-                      </div>
-                      <p className="font-semibold">
-                        ₹{order.mock_price_inr.toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-nutrition">
-                      Demo placed · no charge
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-5 text-sm text-muted">
-                No demo orders yet. Try a recipe or equipment offer.
-              </p>
-            )}
           </Card>
           <Card>
             <h2 className="text-xl font-semibold">Account</h2>

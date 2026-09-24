@@ -1,168 +1,50 @@
-/* eslint-disable @typescript-eslint/require-await -- providers are async by contract; real integrations will await network calls. */
-import type {
-  CommerceOffer,
-  DemoOrderResult,
-  FoodDeliveryProvider,
-  ShoppingProvider,
-} from "./types";
+// Shopping is a set of links to real retailers' own search pages. ForgeFit doesn't show prices,
+// take orders or see what people buy: the retailer handles all of that.
 
-const hash = (value: string) =>
-  [...value].reduce((total, character) => (total * 31 + character.charCodeAt(0)) >>> 0, 17);
+export const GROCERY_PROVIDER_IDS = [
+  "bigbasket",
+  "blinkit",
+  "zepto",
+  "instamart",
+  "jiomart",
+] as const;
+export const FOOD_PROVIDER_IDS = ["swiggy", "zomato"] as const;
+export const EQUIPMENT_PROVIDER_IDS = ["amazon", "flipkart", "decathlon"] as const;
 
-const offer = (
-  sourceId: string,
-  provider: string,
-  label: string,
-  index: number,
-  basePrice: number,
-): CommerceOffer => ({
-  id: `${sourceId}-${index}`,
-  provider,
-  label,
-  priceInr: basePrice + (hash(`${sourceId}-${index}`) % 180),
-  etaMinutes: 15 + (hash(`${provider}-${sourceId}`) % 31),
-  demo: true,
-});
+export type GroceryProviderId = (typeof GROCERY_PROVIDER_IDS)[number];
+export type FoodProviderId = (typeof FOOD_PROVIDER_IDS)[number];
+export type EquipmentProviderId = (typeof EQUIPMENT_PROVIDER_IDS)[number];
+export type ProviderId = GroceryProviderId | FoodProviderId | EquipmentProviderId;
 
-const confirmOrder = (selected: CommerceOffer): DemoOrderResult => ({
-  ...selected,
-  status: "DEMO_PLACED",
-  message: "Demo order placed. No charge was made and no real order was sent.",
-});
+const q = encodeURIComponent;
 
-export class MockShoppingProvider implements ShoppingProvider {
-  // TODO: integrate real e-commerce/delivery API here (e.g. BigBasket, Blinkit, Swiggy, Zomato)
-  async getOffers(type: "INGREDIENT" | "EQUIPMENT", sourceId: string, label: string) {
-    const providers =
-      type === "INGREDIENT"
-        ? ["FreshCart Demo", "QuickBasket Demo"]
-        : ["ForgeMart Demo", "FitSupply Demo"];
-    const basePrice = type === "INGREDIENT" ? 45 : 799;
-    return providers.map((provider, index) => offer(sourceId, provider, label, index, basePrice));
-  }
-
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
-}
-
-export class MockFoodDeliveryProvider implements FoodDeliveryProvider {
-  // TODO: integrate real e-commerce/delivery API here (e.g. BigBasket, Blinkit, Swiggy, Zomato)
-  async getOffers(recipeId: string, recipeName: string) {
-    return ["MealDash Demo", "KitchenHop Demo"].map((provider, index) =>
-      offer(recipeId, provider, recipeName, index, 179),
-    );
-  }
-
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
-}
-
-const buildGoogleSearchUrl = (query: string) =>
-  `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-
-const buildProviderSearchUrl = (provider: string, query: string) => {
-  switch (provider) {
-    case "BigBasket":
-      return `https://www.bigbasket.com/ps/?q=${encodeURIComponent(query)}`;
-    case "Blinkit":
-      return `https://www.blinkit.com/search?query=${encodeURIComponent(query)}`;
-    case "JioMart":
-      return `https://www.jiomart.com/search?q=${encodeURIComponent(query)}`;
-    case "Amazon":
-      return `https://www.amazon.in/s?k=${encodeURIComponent(query)}`;
-    case "Flipkart":
-      return `https://www.flipkart.com/search?q=${encodeURIComponent(query)}`;
-    case "Decathlon":
-      return `https://www.decathlon.in/search?query=${encodeURIComponent(query)}`;
-    case "Swiggy":
-      return `https://www.swiggy.com/search?query=${encodeURIComponent(query)}`;
-    case "Zomato":
-      return `https://www.zomato.com/ncr/search?q=${encodeURIComponent(query)}`;
-    case "Dunzo":
-      return `https://www.dunzo.com/search?city=Bangalore&q=${encodeURIComponent(query)}`;
-    default:
-      return buildGoogleSearchUrl(query);
-  }
+const providers: Record<ProviderId, { name: string; search: (query: string) => string }> = {
+  bigbasket: { name: "BigBasket", search: (s) => `https://www.bigbasket.com/ps/?q=${q(s)}` },
+  blinkit: { name: "Blinkit", search: (s) => `https://blinkit.com/s/?q=${q(s)}` },
+  zepto: { name: "Zepto", search: (s) => `https://www.zeptonow.com/search?query=${q(s)}` },
+  instamart: {
+    name: "Swiggy Instamart",
+    search: (s) => `https://www.swiggy.com/instamart/search?query=${q(s)}`,
+  },
+  jiomart: { name: "JioMart", search: (s) => `https://www.jiomart.com/search/${q(s)}` },
+  swiggy: { name: "Swiggy", search: (s) => `https://www.swiggy.com/search?query=${q(s)}` },
+  zomato: { name: "Zomato", search: (s) => `https://www.zomato.com/search?q=${q(s)}` },
+  amazon: { name: "Amazon", search: (s) => `https://www.amazon.in/s?k=${q(s)}` },
+  flipkart: { name: "Flipkart", search: (s) => `https://www.flipkart.com/search?q=${q(s)}` },
+  decathlon: { name: "Decathlon", search: (s) => `https://www.decathlon.in/search?query=${q(s)}` },
 };
 
-export class FreeShoppingProvider implements ShoppingProvider {
-  async getOffers(type: "INGREDIENT" | "EQUIPMENT", sourceId: string, label: string) {
-    const providers =
-      type === "INGREDIENT"
-        ? ["BigBasket", "Blinkit", "JioMart"]
-        : ["Amazon", "Flipkart", "Decathlon"];
-    const basePrice = type === "INGREDIENT" ? 69 : 1299;
-    return providers.map((provider, index) => ({
-      ...offer(sourceId, provider, label, index, basePrice),
-      demo: false,
-      externalUrl: buildProviderSearchUrl(provider, label),
-    }));
-  }
+export const DEFAULT_GROCERY_PROVIDER: GroceryProviderId = "bigbasket";
 
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
+export function providerName(id: ProviderId): string {
+  return providers[id].name;
 }
 
-export class FreeFoodDeliveryProvider implements FoodDeliveryProvider {
-  async getOffers(recipeId: string, recipeName: string) {
-    const providers = ["Swiggy", "Zomato", "Dunzo"];
-    return providers.map((provider, index) => ({
-      ...offer(recipeId, provider, recipeName, index, 199),
-      demo: false,
-      externalUrl: buildProviderSearchUrl(provider, recipeName),
-    }));
-  }
-
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
+/** The retailer's own search page for `query`. */
+export function providerSearchUrl(id: ProviderId, query: string): string {
+  return providers[id].search(query.trim());
 }
 
-export class RealShoppingProvider implements ShoppingProvider {
-  async getOffers(type: "INGREDIENT" | "EQUIPMENT", sourceId: string, label: string) {
-    const providers =
-      type === "INGREDIENT"
-        ? ["BigBasket", "Blinkit", "JioMart"]
-        : ["Amazon", "Flipkart", "Decathlon"];
-    const basePrice = type === "INGREDIENT" ? 69 : 1299;
-    return providers.map((provider, index) => ({
-      ...offer(sourceId, provider, label, index, basePrice),
-      demo: false,
-      externalUrl: buildProviderSearchUrl(provider, label),
-    }));
-  }
-
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
-}
-
-export class RealFoodDeliveryProvider implements FoodDeliveryProvider {
-  async getOffers(recipeId: string, recipeName: string) {
-    const providers = ["Swiggy", "Zomato", "Dunzo"];
-    return providers.map((provider, index) => ({
-      ...offer(recipeId, provider, recipeName, index, 199),
-      demo: false,
-      externalUrl: buildProviderSearchUrl(provider, recipeName),
-    }));
-  }
-
-  placeDemoOrder(selected: CommerceOffer) {
-    return confirmOrder(selected);
-  }
-}
-
-export function createShoppingProvider() {
-  return process.env.GROCERY_API_KEY || process.env.EQUIPMENT_API_KEY
-    ? new RealShoppingProvider()
-    : new FreeShoppingProvider();
-}
-
-export function createFoodDeliveryProvider() {
-  return process.env.FOOD_DELIVERY_API_KEY
-    ? new RealFoodDeliveryProvider()
-    : new FreeFoodDeliveryProvider();
+export function isGroceryProvider(value: unknown): value is GroceryProviderId {
+  return GROCERY_PROVIDER_IDS.includes(value as GroceryProviderId);
 }

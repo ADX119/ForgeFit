@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { GROCERY_PROVIDER_IDS } from "./commerce";
 import { DEFAULT_TIME_ZONE, isValidTimeZone } from "./time";
 import {
   ACTIVITY_LEVELS,
   CALCULATION_SEXES,
   DIET_GOALS,
   DIET_PREFERENCES,
-  ORDER_TYPES,
+  TRAINING_LOCATIONS,
 } from "./types";
 
 export const profileSchema = z.object({
@@ -49,14 +50,17 @@ export const groceryRecipeSchema = z.object({
   servings: z.number().positive().max(20),
 });
 
-export const demoOrderSchema = z.object({
-  type: z.enum(ORDER_TYPES),
-  sourceId: z.string().min(1),
-  sourceName: z.string().trim().min(1).max(120),
-  offerId: z.string().min(1),
-  provider: z.string().min(1),
-  priceInr: z.number().positive(),
-  etaMinutes: z.number().int().positive(),
+export const groceryProviderSchema = z.object({
+  provider: z.enum(GROCERY_PROVIDER_IDS),
+});
+
+export const trainingLocationSchema = z.object({
+  location: z.enum(TRAINING_LOCATIONS),
+});
+
+export const equipmentOwnershipSchema = z.object({
+  equipmentId: z.uuid(),
+  owned: z.boolean(),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;

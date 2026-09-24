@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { source: "/diet", destination: "/nutrition", permanent: false },
       { source: "/grocery", destination: "/nutrition/grocery", permanent: false },
       { source: "/recipes/:id", destination: "/nutrition/recipes/:id", permanent: false },
+      { source: "/shop", destination: "/train/equipment", permanent: false },
     ];
   },
   async headers() {

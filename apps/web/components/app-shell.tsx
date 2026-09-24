@@ -3,7 +3,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Apple, Dumbbell, House, ShoppingBag, UserRound } from "lucide-react";
+import { Apple, Dumbbell, House, UserRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@forgefit/ui";
 import { Brand } from "./brand";
@@ -17,9 +17,6 @@ const primaryNav: NavItem[] = [
   { href: "/nutrition", label: "Nutrition", icon: Apple },
   { href: "/profile", label: "Profile", icon: UserRound },
 ];
-
-// Secondary destinations: sidebar only, below the main sections.
-const secondaryNav: NavItem[] = [{ href: "/shop", label: "Shop", icon: ShoppingBag }];
 
 /**
  * "tab": icon over a small label (mobile bottom bar).
@@ -66,11 +63,6 @@ export function AppShell({
         </div>
         <nav className="mt-8 grid gap-1" aria-label="Primary">
           {primaryNav.map((item) => (
-            <NavLink key={item.href} item={item} variant="rail" />
-          ))}
-        </nav>
-        <nav className="mt-4 grid gap-1 border-t border-line pt-4" aria-label="More">
-          {secondaryNav.map((item) => (
             <NavLink key={item.href} item={item} variant="rail" />
           ))}
         </nav>
