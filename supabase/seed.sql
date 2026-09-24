@@ -43,6 +43,23 @@ insert into public.exercises (id,name,slug,primary_muscle_group_id,difficulty,im
 ('c0000000-0000-4000-8000-000000000021','Bear Crawl','bear-crawl','a0000000-0000-4000-8000-000000000007','INTERMEDIATE','/images/exercises/full-body.svg',4,'20–30 sec','A locomotion drill that challenges shoulders, hips, and core.')
 on conflict do nothing;
 
+-- How each exercise is measured (the migration sets the same values on existing databases).
+update public.exercises set tracking_type = case slug
+  when 'push-up' then 'REPS_ADDED_WEIGHT'
+  when 'pull-up' then 'REPS_ADDED_WEIGHT'
+  when 'bench-triceps-dip' then 'REPS_ADDED_WEIGHT'
+  when 'pike-push-up' then 'REPS'
+  when 'hanging-knee-raise' then 'REPS'
+  when 'dead-bug' then 'REPS'
+  when 'resistance-band-fly' then 'REPS'
+  when 'band-face-pull' then 'REPS'
+  when 'band-hammer-curl' then 'REPS'
+  when 'forearm-plank' then 'DURATION'
+  when 'bear-crawl' then 'DURATION'
+  else 'WEIGHT_REPS'
+end::public.tracking_type
+where owner_user_id is null;
+
 insert into public.exercise_steps (exercise_id, position, instruction)
 select id, 1, 'Set up in a stable position and brace your core before starting.' from public.exercises
 union all select id, 2, 'Move through a controlled range while keeping the target muscles engaged.' from public.exercises

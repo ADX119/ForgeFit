@@ -16,6 +16,11 @@ const exercises: ExerciseView[] = [
     suggested_sets: 3,
     suggested_reps: "8–15",
     description: "A foundational press.",
+    tracking_type: "WEIGHT_REPS",
+    owner_user_id: null,
+    cues: [],
+    default_rest_seconds: null,
+    is_archived: false,
     muscle: { id: "a0000000-0000-4000-8000-000000000001", name: "Chest", slug: "chest" },
     equipment: [],
   },
@@ -29,6 +34,11 @@ const exercises: ExerciseView[] = [
     suggested_sets: 4,
     suggested_reps: "5–10",
     description: "A vertical pull.",
+    tracking_type: "REPS_ADDED_WEIGHT",
+    owner_user_id: null,
+    cues: [],
+    default_rest_seconds: null,
+    is_archived: false,
     muscle: { id: "a0000000-0000-4000-8000-000000000002", name: "Back", slug: "back" },
     equipment: [
       {
