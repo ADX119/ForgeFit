@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import { PaletteBridge } from "@/components/palette";
 import { PwaRegister } from "@/components/pwa-register";
 import { ToastProvider } from "@/components/toast";
 import "./globals.css";
@@ -23,7 +22,6 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <body>
         <ToastProvider>{children}</ToastProvider>
         <PwaRegister />
-        {process.env.NODE_ENV === "production" ? null : <PaletteBridge />}
       </body>
     </html>
   );

@@ -31,7 +31,6 @@ import {
 import { CalendarDays, ChevronRight, Dumbbell, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Brand } from "@/components/brand";
-import { PALETTES, usePalette } from "@/components/palette";
 import { useToast } from "@/components/toast";
 
 const tokens = [
@@ -63,7 +62,6 @@ export function DesignGallery() {
   const [weight, setWeight] = useState<number | null>(60);
   const [reps, setReps] = useState<number | null>(8);
   const [emailError, setEmailError] = useState(false);
-  const [palette, setPalette] = usePalette();
 
   return (
     <main className="mx-auto grid max-w-5xl gap-12 px-4 py-10 sm:px-8">
@@ -76,36 +74,6 @@ export function DesignGallery() {
         title="ForgeFit components"
         description="Every shared component in its states. New screens are built only from these."
       />
-
-      <Section title="Palette (preview across the whole app)">
-        <div
-          role="radiogroup"
-          aria-label="Palette"
-          className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
-        >
-          {PALETTES.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              role="radio"
-              aria-checked={palette === option.id}
-              onClick={() => setPalette(option.id)}
-              className={`grid h-full content-start gap-1 rounded-xl border p-4 text-left transition-colors ${
-                palette === option.id
-                  ? "border-primary bg-raised"
-                  : "border-line bg-surface hover:border-line-strong"
-              }`}
-            >
-              <span className="text-sm font-medium text-ink">{option.name}</span>
-              <span className="text-xs text-muted">{option.note}</span>
-            </button>
-          ))}
-        </div>
-        <p className="text-sm text-muted">
-          Your choice is saved in this browser and applied to every page while developing, so you
-          can compare them on the real screens.
-        </p>
-      </Section>
 
       <Section title="Colour tokens">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
