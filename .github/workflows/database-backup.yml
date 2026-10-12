@@ -12,8 +12,9 @@
 name: Database backup
 
 on:
-  schedule:
-    - cron: "30 20 * * 0" # Sundays 20:30 UTC = Mondays 02:00 IST
+  # Schedule paused while the Supabase project is inactive. Uncomment to resume weekly backups.
+  # schedule:
+  #   - cron: "30 20 * * 0" # Sundays 20:30 UTC = Mondays 02:00 IST
   workflow_dispatch:
 
 permissions:
