@@ -184,6 +184,10 @@ psql "$TARGET_DB_URL" --single-transaction -f roles.sql -f schema.sql \
   -c "SET session_replication_role = replica" -f data.sql
 ```
 
+## Open decisions
+
+Decisions still to be made are recorded in `docs/decisions/`. Currently open: [0001 — AI layer provider](docs/decisions/0001-ai-layer-provider.md).
+
 ## PWA and deployment
 
 The production build provides a web manifest, maskable icons, install guidance, security headers, a minimal offline fallback, and responsive navigation at phone, tablet, and desktop widths. Serve the deployed application over HTTPS for installation. Configure the production URL in both `NEXT_PUBLIC_SITE_URL` and Supabase Auth redirect settings.
